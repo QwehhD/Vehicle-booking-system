@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\ApprovalStatus;
 use App\Enums\BookingStatus;
 use Carbon\CarbonImmutable;
+use Closure;
 use Database\Factories\BookingFactory;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -119,6 +120,20 @@ class Booking extends Model
     public function hasTemporaryCode(): bool
     {
         return str_starts_with($this->code, self::TEMPORARY_CODE_PREFIX);
+    }
+
+    /**
+     * Hitungan approval untuk progres persetujuan, mis. "1/2"; dipakai
+     * dengan withCount() atau loadCount().
+     *
+     * @return array<int|string, Closure|string>
+     */
+    public static function approvalProgressCounts(): array
+    {
+        return [
+            'approvals',
+            'approvals as approved_approvals_count' => fn (Builder $query) => $query->where('status', ApprovalStatus::Approved),
+        ];
     }
 
     /**

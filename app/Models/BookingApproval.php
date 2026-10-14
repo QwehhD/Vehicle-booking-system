@@ -4,10 +4,12 @@ namespace App\Models;
 
 use App\Enums\ApprovalStatus;
 use App\Enums\BookingStatus;
+use App\Policies\ApprovalPolicy;
 use Carbon\CarbonImmutable;
 use Database\Factories\BookingApprovalFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,6 +29,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read User $approver
  */
 #[Fillable(['booking_id', 'approver_id', 'level', 'status', 'note', 'acted_at'])]
+#[UsePolicy(ApprovalPolicy::class)]
 class BookingApproval extends Model
 {
     /** @use HasFactory<BookingApprovalFactory> */
@@ -75,5 +78,43 @@ class BookingApproval extends Model
             ->whereHas('booking', fn (Builder $booking) => $booking
                 ->where('status', BookingStatus::Pending)
                 ->whereColumn('bookings.current_level', 'booking_approvals.level'));
+    }
+
+    /**
+     * Approval yang masih menunggu level sebelumnya diproses.
+     *
+     * @param  Builder<self>  $query
+     */
+    #[Scope]
+    protected function awaitingPreviousLevels(Builder $query): void
+    {
+        $query->where('status', ApprovalStatus::Pending)
+            ->whereHas('booking', fn (Builder $booking) => $booking
+                ->where('status', BookingStatus::Pending)
+                ->whereColumn('bookings.current_level', '<', 'booking_approvals.level'));
+    }
+
+    /**
+     * Approval yang sudah disetujui, ditolak, atau dilewati.
+     *
+     * @param  Builder<self>  $query
+     */
+    #[Scope]
+    protected function finished(Builder $query): void
+    {
+        $query->whereIn('status', [ApprovalStatus::Approved, ApprovalStatus::Rejected, ApprovalStatus::Skipped]);
+    }
+
+    /**
+     * Urutkan berdasarkan jadwal mulai booking, yang terdekat lebih dulu.
+     *
+     * @param  Builder<self>  $query
+     */
+    #[Scope]
+    protected function orderByBookingStart(Builder $query): void
+    {
+        $query->orderBy(
+            Booking::query()->select('start_at')->whereColumn('bookings.id', 'booking_approvals.booking_id'),
+        )->orderBy('id');
     }
 }
