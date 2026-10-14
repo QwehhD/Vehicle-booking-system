@@ -177,6 +177,44 @@ class Booking extends Model
     }
 
     /**
+     * Filter daftar pemesanan; kunci yang kosong diabaikan.
+     *
+     * @param  Builder<self>  $query
+     * @param  array{search?: string|null, status?: string|null, vehicle_type?: string|null, region_id?: int|string|null, date_from?: string|null, date_to?: string|null}  $filters
+     */
+    #[Scope]
+    protected function filter(Builder $query, array $filters): void
+    {
+        $query
+            ->when($filters['search'] ?? null, fn (Builder $query, string $search) => $query->search($search))
+            ->when($filters['status'] ?? null, fn (Builder $query, string $status) => $query->where('status', $status))
+            ->when($filters['vehicle_type'] ?? null, fn (Builder $query, string $type) => $query
+                ->whereHas('vehicle', fn (Builder $vehicle) => $vehicle->where('type', $type)))
+            ->when($filters['region_id'] ?? null, fn (Builder $query, int|string $regionId) => $query
+                ->whereHas('vehicle.location', fn (Builder $location) => $location->where('region_id', $regionId)))
+            ->when($filters['date_from'] ?? null, fn (Builder $query, string $from) => $query
+                ->where('start_at', '>=', CarbonImmutable::parse($from)->startOfDay()))
+            ->when($filters['date_to'] ?? null, fn (Builder $query, string $to) => $query
+                ->where('start_at', '<', CarbonImmutable::parse($to)->addDay()->startOfDay()));
+    }
+
+    /**
+     * Pencarian berdasarkan kode, nama pemohon, atau plat nomor kendaraan.
+     *
+     * @param  Builder<self>  $query
+     */
+    #[Scope]
+    protected function search(Builder $query, string $term): void
+    {
+        $like = "%{$term}%";
+
+        $query->where(fn (Builder $query) => $query
+            ->where('code', 'like', $like)
+            ->orWhere('requester_name', 'like', $like)
+            ->orWhereHas('vehicle', fn (Builder $vehicle) => $vehicle->where('plate_number', 'like', $like)));
+    }
+
+    /**
      * Booking yang masih memakai jadwal kendaraan/driver (pending atau approved).
      *
      * @param  Builder<self>  $query

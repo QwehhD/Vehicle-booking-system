@@ -2,8 +2,12 @@
 
 namespace App\Enums;
 
+use App\Enums\Concerns\HasOptions;
+
 enum VehicleType: string
 {
+    use HasOptions;
+
     case Passenger = 'passenger';
     case Cargo = 'cargo';
 
