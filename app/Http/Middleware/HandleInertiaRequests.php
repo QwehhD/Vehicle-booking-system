@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -41,6 +42,27 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'flash' => [
+                'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
+            ],
+            'pendingApprovalsCount' => fn () => $this->pendingApprovalsCount($request),
+            'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
+    }
+
+    /**
+     * Jumlah approval yang sedang menunggu giliran approver yang login,
+     * untuk badge menu Persetujuan. Null untuk selain approver.
+     */
+    private function pendingApprovalsCount(Request $request): ?int
+    {
+        $user = $request->user();
+
+        if (! $user instanceof User || ! $user->isApprover()) {
+            return null;
+        }
+
+        return $user->approvals()->awaitingTurn()->count();
     }
 }
