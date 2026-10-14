@@ -1,4 +1,5 @@
 import type { Auth } from '@/types/auth';
+import type { Flash } from '@/types/ui';
 
 declare module 'react' {
     interface InputHTMLAttributes<T> {
@@ -12,6 +13,8 @@ declare module '@inertiajs/core' {
             name: string;
             auth: Auth;
             sidebarOpen: boolean;
+            flash: Flash;
+            pendingApprovalsCount: number | null;
             [key: string]: unknown;
         };
     }
