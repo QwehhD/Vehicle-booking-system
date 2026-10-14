@@ -31,6 +31,11 @@ class BookingApprovalResource extends JsonResource
                 'name' => $this->approver->name,
                 'position' => $this->approver->position,
             ]),
+            'booking' => BookingResource::make($this->whenLoaded('booking')),
+            'can_process' => $this->when(
+                $this->relationLoaded('booking'),
+                fn () => (bool) $request->user()?->can('approve', $this->resource),
+            ),
         ];
     }
 }

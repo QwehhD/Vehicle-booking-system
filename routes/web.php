@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\BookingController;
 use App\Models\Booking;
 use Illuminate\Support\Facades\Route;
@@ -36,7 +37,13 @@ Route::middleware('auth')->group(function () {
         ->name('bookings.show');
 
     Route::middleware('role:approver')->group(function () {
-        Route::inertia('approvals', 'approvals/index')->name('approvals.index');
+        Route::get('approvals', [ApprovalController::class, 'index'])->name('approvals.index');
+        Route::post('approvals/{approval}/approve', [ApprovalController::class, 'approve'])
+            ->can('approve', 'approval')
+            ->name('approvals.approve');
+        Route::post('approvals/{approval}/reject', [ApprovalController::class, 'reject'])
+            ->can('reject', 'approval')
+            ->name('approvals.reject');
     });
 });
 
