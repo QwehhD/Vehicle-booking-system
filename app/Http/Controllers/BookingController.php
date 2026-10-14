@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\ApprovalStatus;
 use App\Enums\BookingStatus;
 use App\Enums\VehicleType;
 use App\Http\Requests\Bookings\CancelBookingRequest;
@@ -15,9 +14,7 @@ use App\Models\Booking;
 use App\Models\Region;
 use App\Models\User;
 use App\Services\BookingService;
-use Closure;
 use Illuminate\Container\Attributes\CurrentUser;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -32,7 +29,7 @@ class BookingController extends Controller
 
         $bookings = Booking::query()
             ->with(['vehicle', 'driver'])
-            ->withCount($this->approvalCounts())
+            ->withCount(Booking::approvalProgressCounts())
             ->filter($filters)
             ->latest()
             ->latest('id')
@@ -65,7 +62,7 @@ class BookingController extends Controller
     {
         $booking
             ->load(['vehicle.location.region', 'driver.location', 'creator', 'approvals.approver', 'activityLogs.user'])
-            ->loadCount($this->approvalCounts());
+            ->loadCount(Booking::approvalProgressCounts());
 
         return Inertia::render('bookings/show', [
             'booking' => BookingResource::make($booking),
@@ -74,6 +71,7 @@ class BookingController extends Controller
                 'cancel' => $user->can('cancel', $booking),
                 'complete' => $user->can('complete', $booking),
             ],
+            'actionableApproval' => $this->actionableApproval($booking, $user),
         ]);
     }
 
@@ -92,15 +90,24 @@ class BookingController extends Controller
     }
 
     /**
-     * Jumlah approval total dan yang sudah disetujui untuk kolom progres.
+     * Approval milik user yang sedang menjadi gilirannya pada booking ini,
+     * untuk menampilkan tombol Setujui/Tolak. Policy diperiksa pada salinan
+     * approval agar relasi booking tidak ikut terserialisasi ke props.
      *
-     * @return array<int|string, Closure|string>
+     * @return array{id: int, level: int, total_levels: int}|null
      */
-    private function approvalCounts(): array
+    private function actionableApproval(Booking $booking, User $user): ?array
     {
+        $approval = $booking->approvals->firstWhere('approver_id', $user->id);
+
+        if ($approval === null || ! $user->can('approve', (clone $approval)->setRelation('booking', $booking))) {
+            return null;
+        }
+
         return [
-            'approvals',
-            'approvals as approved_approvals_count' => fn (Builder $query) => $query->where('status', ApprovalStatus::Approved),
+            'id' => $approval->id,
+            'level' => $approval->level,
+            'total_levels' => $booking->approvals->count(),
         ];
     }
 }

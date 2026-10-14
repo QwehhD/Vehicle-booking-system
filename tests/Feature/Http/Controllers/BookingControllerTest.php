@@ -404,7 +404,28 @@ describe('show', function () {
             ->get(route('bookings.show', $booking))
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
-                ->where('can', ['cancel' => false, 'complete' => false]));
+                ->where('can', ['cancel' => false, 'complete' => false])
+                ->where('actionableApproval', null));
+    });
+
+    test('offers approval actions only to the approver whose turn it is', function () {
+        [$first, $second] = User::factory()->approver()->count(2)->create();
+        $booking = Booking::factory()->withApprovers($first, $second)->create();
+        $approval = $booking->approvals()->where('level', 1)->sole();
+
+        $this->actingAs($first)
+            ->get(route('bookings.show', $booking))
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('actionableApproval', ['id' => $approval->id, 'level' => 1, 'total_levels' => 2])
+                ->missing('booking.approvals.0.booking'));
+
+        $this->actingAs($second)
+            ->get(route('bookings.show', $booking))
+            ->assertInertia(fn (Assert $page) => $page->where('actionableApproval', null));
+
+        $this->actingAs(User::factory()->admin()->create())
+            ->get(route('bookings.show', $booking))
+            ->assertInertia(fn (Assert $page) => $page->where('actionableApproval', null));
     });
 
     test('forbids approvers who are not part of the booking', function () {

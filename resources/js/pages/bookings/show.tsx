@@ -1,5 +1,6 @@
 import { Head } from '@inertiajs/react';
 import type { ReactNode } from 'react';
+import { ApprovalActions } from '@/components/approvals/approval-actions';
 import { ApprovalTimeline } from '@/components/bookings/approval-timeline';
 import { BookingActivity } from '@/components/bookings/booking-activity';
 import { CancelBookingDialog } from '@/components/bookings/cancel-booking-dialog';
@@ -15,6 +16,7 @@ export default function BookingsShow({
     booking,
     activityLogs,
     can,
+    actionableApproval,
 }: BookingShowProps) {
     const vehicle = booking.vehicle;
     const driver = booking.driver;
@@ -39,8 +41,14 @@ export default function BookingsShow({
                             {formatDateTime(booking.created_at)}
                         </p>
                     </div>
-                    {(can.cancel || can.complete) && (
+                    {(can.cancel || can.complete || actionableApproval) && (
                         <div className="flex flex-wrap gap-2">
+                            {actionableApproval && (
+                                <ApprovalActions
+                                    approval={actionableApproval}
+                                    bookingCode={booking.code}
+                                />
+                            )}
                             {can.complete && (
                                 <CompleteBookingDialog booking={booking} />
                             )}
