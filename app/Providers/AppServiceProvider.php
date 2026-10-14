@@ -17,6 +17,7 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
@@ -66,8 +67,9 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure Eloquent: morph map for activity log subjects and lazy loading
-     * guard so N+1 queries surface during development.
+     * Configure Eloquent: morph map for activity log subjects, lazy loading
+     * guard so N+1 queries surface during development, and unwrapped API
+     * resources for Inertia props.
      */
     protected function configureModels(): void
     {
@@ -83,6 +85,8 @@ class AppServiceProvider extends ServiceProvider
         ]);
 
         Model::preventLazyLoading(! app()->isProduction());
+
+        JsonResource::withoutWrapping();
     }
 
     /**
