@@ -69,6 +69,8 @@ export type BookingApproval = {
     note: string | null;
     acted_at: string | null;
     approver?: { id: number; name: string; position: string | null };
+    booking?: Booking;
+    can_process?: boolean;
 };
 
 export type Booking = {
@@ -159,6 +161,12 @@ export type BookingCreateProps = {
     approvers: SelectOption[];
 };
 
+export type ActionableApproval = {
+    id: number;
+    level: number;
+    total_levels: number;
+};
+
 export type BookingShowProps = {
     booking: Booking;
     activityLogs: ActivityLog[];
@@ -166,4 +174,14 @@ export type BookingShowProps = {
         cancel: boolean;
         complete: boolean;
     };
+    actionableApproval: ActionableApproval | null;
+};
+
+export type ApprovalTab = 'waiting' | 'queue' | 'history';
+
+export type ApprovalIndexProps = {
+    tab: ApprovalTab;
+    tabs: { value: ApprovalTab; label: string }[];
+    counts: Record<ApprovalTab, number>;
+    approvals: Paginated<BookingApproval>;
 };
