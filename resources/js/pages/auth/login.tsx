@@ -1,4 +1,5 @@
 import { Form, Head } from '@inertiajs/react';
+import { ArrowRight } from 'lucide-react';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import { Button } from '@/components/ui/button';
@@ -59,13 +60,18 @@ export default function Login() {
 
                         <Button
                             type="submit"
-                            className="mt-4 w-full"
+                            size="lg"
+                            className="group mt-2 w-full justify-between"
                             tabIndex={4}
                             disabled={processing}
                             data-test="login-button"
                         >
-                            {processing && <Spinner />}
                             Masuk
+                            {processing ? (
+                                <Spinner />
+                            ) : (
+                                <ArrowRight className="transition-transform duration-300 ease-[var(--ease-out-expo)] group-hover:translate-x-1" />
+                            )}
                         </Button>
                     </div>
                 )}

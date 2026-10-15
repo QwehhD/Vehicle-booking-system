@@ -1,37 +1,97 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import AppLogoIcon from '@/components/app-logo-icon';
+import { OrbitArt } from '@/components/orbit-art';
+import { TodayDate } from '@/components/today-date';
 import { home } from '@/routes';
 import type { AuthLayoutProps } from '@/types';
 
+const FEATURES = [
+    'Pemesanan kendaraan',
+    'Persetujuan berjenjang',
+    'Laporan periodik',
+];
+
+/**
+ * Layout halaman tamu bergaya editorial: judul bergradasi dan form di kiri,
+ * ilustrasi orbit dan tanggal hari ini di kanan.
+ */
 export default function AuthSimpleLayout({
     children,
     title,
     description,
 }: AuthLayoutProps) {
-    return (
-        <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10">
-            <div className="w-full max-w-sm">
-                <div className="flex flex-col gap-8">
-                    <div className="flex flex-col items-center gap-4">
-                        <Link
-                            href={home()}
-                            className="flex flex-col items-center gap-2 font-medium"
-                        >
-                            <div className="mb-1 flex h-9 w-9 items-center justify-center rounded-md">
-                                <AppLogoIcon className="size-9 text-foreground" />
-                            </div>
-                            <span className="sr-only">{title}</span>
-                        </Link>
+    const { name } = usePage().props;
 
-                        <div className="space-y-2 text-center">
-                            <h1 className="text-xl font-medium">{title}</h1>
-                            <p className="text-center text-sm text-muted-foreground">
-                                {description}
+    return (
+        <div className="app-canvas relative min-h-svh overflow-hidden bg-background">
+            <div className="relative mx-auto flex min-h-svh max-w-7xl flex-col px-5 sm:px-10">
+                <header className="reveal flex h-20 shrink-0 items-center justify-between gap-4">
+                    <Link
+                        href={home()}
+                        className="flex items-center gap-3 rounded-sm focus-visible:ring-[3px] focus-visible:ring-ring/40 focus-visible:outline-none"
+                    >
+                        <span className="flex size-9 items-center justify-center rounded-full border border-foreground/40">
+                            <AppLogoIcon className="size-4" />
+                        </span>
+                        <span className="font-display text-sm font-medium tracking-[0.24em] uppercase">
+                            Armada
+                        </span>
+                    </Link>
+                    <span className="eyebrow hidden sm:inline">{name}</span>
+                </header>
+
+                <main className="grid flex-1 items-center gap-12 py-8 lg:grid-cols-2 lg:py-12">
+                    <section className="grid max-w-md gap-10">
+                        <div className="grid gap-5">
+                            <p className="reveal font-display text-5xl leading-[1.02] font-light tracking-tight [--stagger:1] sm:text-6xl">
+                                <span className="text-gradient">
+                                    Setiap perjalanan, tercatat rapi.
+                                </span>
+                            </p>
+                            <p className="reveal max-w-sm text-sm text-muted-foreground [--stagger:2]">
+                                Pesan kendaraan, setujui berjenjang, dan pantau
+                                pemakaian armada dari satu tempat.
                             </p>
                         </div>
-                    </div>
-                    {children}
-                </div>
+
+                        <div className="reveal grid gap-6 [--stagger:3]">
+                            <div className="grid gap-1.5 border-t pt-6">
+                                <h1 className="font-display text-lg font-medium tracking-tight">
+                                    {title}
+                                </h1>
+                                <p className="text-sm text-muted-foreground">
+                                    {description}
+                                </p>
+                            </div>
+                            {children}
+                        </div>
+                    </section>
+
+                    <section
+                        aria-hidden
+                        className="reveal relative hidden items-center justify-center [--stagger:2] lg:flex"
+                    >
+                        <OrbitArt className="w-full max-w-[32rem]" />
+                        <div className="absolute right-0 bottom-0 text-right">
+                            <p className="eyebrow mb-3">Hari ini</p>
+                            <TodayDate className="text-4xl xl:text-5xl" />
+                        </div>
+                    </section>
+                </main>
+
+                <footer className="reveal shrink-0 [--stagger:4]">
+                    <div aria-hidden className="gradient-rule" />
+                    <ul className="flex flex-wrap gap-x-8 gap-y-2 py-5">
+                        {FEATURES.map((feature, index) => (
+                            <li key={feature} className="eyebrow">
+                                <span className="mr-2 text-foreground/80 tabular-nums">
+                                    0{index + 1}
+                                </span>
+                                {feature}
+                            </li>
+                        ))}
+                    </ul>
+                </footer>
             </div>
         </div>
     );
