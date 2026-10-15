@@ -39,7 +39,12 @@ export function DashboardFilters({
     return (
         <div className="flex flex-wrap items-end gap-3">
             <div className="grid gap-1.5">
-                <Label htmlFor="year">Tahun</Label>
+                <Label
+                    htmlFor="year"
+                    className="text-[11px] font-medium tracking-[0.14em] text-muted-foreground uppercase"
+                >
+                    Tahun
+                </Label>
                 <Select
                     value={String(filters.year)}
                     onValueChange={(year) => apply({ year: Number(year) })}
@@ -57,7 +62,12 @@ export function DashboardFilters({
                 </Select>
             </div>
             <div className="grid gap-1.5">
-                <Label htmlFor="region_id">Region</Label>
+                <Label
+                    htmlFor="region_id"
+                    className="text-[11px] font-medium tracking-[0.14em] text-muted-foreground uppercase"
+                >
+                    Region
+                </Label>
                 <Select
                     value={filters.region_id?.toString() ?? ALL}
                     onValueChange={(region) =>
