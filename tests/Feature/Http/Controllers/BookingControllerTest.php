@@ -90,6 +90,20 @@ describe('index', function () {
                 ->where('filters.search', $term));
     })->with(['code', 'requester', 'plate']);
 
+    test('treats the search term as plain text', function (string $term) {
+        $admin = User::factory()->admin()->create();
+        Booking::factory()->count(2)->create();
+
+        $this->actingAs($admin)
+            ->get(route('bookings.index', ['search' => $term]))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page->has('bookings.data', 0));
+    })->with([
+        'sql comment' => "' OR 1=1 --",
+        'like wildcard only' => '%%',
+        'underscore' => '___',
+    ]);
+
     test('filters by status, vehicle type, and region', function () {
         $admin = User::factory()->admin()->create();
         $region = Region::factory()->create();
@@ -211,6 +225,28 @@ describe('store', function () {
             ->subject_id->toBe($booking->id)
             ->description->toBe("{$admin->name} membuat pemesanan {$booking->code} untuk Dewi Kartika (DT 1234 AB)")
             ->and($log->properties['approvers'])->toBe([$third->name, $first->name, $second->name]);
+    });
+
+    test('ignores fields that are not part of the form', function () {
+        $admin = User::factory()->admin()->create();
+        $other = User::factory()->admin()->create();
+
+        $this->actingAs($admin)->post(route('bookings.store'), bookingPayload([
+            'status' => 'approved',
+            'current_level' => 3,
+            'code' => 'BK-HACK-00001',
+            'created_by' => $other->id,
+            'odometer_end' => 99_999,
+            'completed_at' => '2026-10-01 08:00:00',
+        ]))->assertSessionHasNoErrors();
+
+        expect(Booking::sole())
+            ->status->toBe(BookingStatus::Pending)
+            ->current_level->toBe(1)
+            ->code->toStartWith('BK-202610-')
+            ->created_by->toBe($admin->id)
+            ->odometer_end->toBeNull()
+            ->completed_at->toBeNull();
     });
 
     test('rejects invalid input', function (Closure $overrides, string $field, string $message) {
@@ -396,6 +432,28 @@ describe('show', function () {
                 ->where('can', ['cancel' => true, 'complete' => false]));
     });
 
+    test('shows ip addresses and user agents of the activity logs only to admins', function () {
+        $admin = User::factory()->admin()->create();
+        [$first, $second] = User::factory()->approver()->count(2)->create();
+        $booking = Booking::factory()->withApprovers($first, $second)->create();
+        ActivityLog::factory()->for($admin)->for($booking, 'subject')->create([
+            'ip_address' => '10.20.1.11',
+            'user_agent' => 'AdminBrowser/1.0',
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('bookings.show', $booking))
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('activityLogs.0.ip_address', '10.20.1.11')
+                ->where('activityLogs.0.user_agent', 'AdminBrowser/1.0'));
+
+        $this->actingAs($first)
+            ->get(route('bookings.show', $booking))
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('activityLogs.0.ip_address', null)
+                ->where('activityLogs.0.user_agent', null));
+    });
+
     test('lets an approver of the booking view it without admin actions', function () {
         [$first, $second] = User::factory()->approver()->count(2)->create();
         $booking = Booking::factory()->approved()->state(['current_level' => 2])->withApprovers($first, $second)->create();
@@ -533,6 +591,23 @@ describe('complete', function () {
         expect($log)
             ->description->toBe("{$admin->name} menyelesaikan {$booking->code} (125 km, 14,75 L)")
             ->properties->toBe(['odometer_start' => 84_120, 'odometer_end' => 84_245, 'distance' => 125, 'fuel_used' => 14.75]);
+    });
+
+    test('never moves the vehicle odometer backwards', function () {
+        $admin = User::factory()->admin()->create();
+        $vehicle = Vehicle::factory()->create(['odometer' => 90_000]);
+        $booking = Booking::factory()->approved()->for($vehicle)->create();
+
+        $this->actingAs($admin)
+            ->patch(route('bookings.complete', $booking), [
+                'odometer_start' => 84_120,
+                'odometer_end' => 84_245,
+                'fuel_used' => 10,
+            ])
+            ->assertSessionHasNoErrors();
+
+        expect($booking->refresh()->odometer_end)->toBe(84_245)
+            ->and($vehicle->refresh()->odometer)->toBe(90_000);
     });
 
     test('only completes approved bookings', function (string $status) {
