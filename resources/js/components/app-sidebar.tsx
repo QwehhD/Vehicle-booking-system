@@ -1,28 +1,32 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
+    BarChart3,
     CalendarCheck,
     ClipboardCheck,
     FileSpreadsheet,
     History,
+    LayoutDashboard,
     LayoutGrid,
     Plus,
+    Route,
     Truck,
 } from 'lucide-react';
-import { AnimatedNumber } from '@/components/animated-number';
-import AppLogo from '@/components/app-logo';
+import type { LucideIcon } from 'lucide-react';
+import AppLogoIcon from '@/components/app-logo-icon';
+import { AppearanceToggle } from '@/components/appearance-toggle';
 import { NavMain } from '@/components/nav-main';
 import type { NavGroup } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Button } from '@/components/ui/button';
+import { Sidebar, useSidebar } from '@/components/ui/sidebar';
 import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarHeader,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-} from '@/components/ui/sidebar';
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { useCurrentUrl } from '@/hooks/use-current-url';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { cn } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import { index as activityLogsIndex } from '@/routes/activity-logs';
 import { index as approvalsIndex } from '@/routes/approvals';
@@ -32,7 +36,7 @@ import {
 } from '@/routes/bookings';
 import { index as reportsIndex } from '@/routes/reports';
 import { index as vehiclesIndex } from '@/routes/vehicles';
-import type { UserRole } from '@/types';
+import type { NavItem, UserRole } from '@/types';
 
 function navGroupsFor(
     role: UserRole,
@@ -40,6 +44,7 @@ function navGroupsFor(
 ): NavGroup[] {
     const overview: NavGroup = {
         label: 'Ringkasan',
+        icon: LayoutDashboard,
         items: [{ title: 'Dashboard', href: dashboard(), icon: LayoutGrid }],
     };
 
@@ -48,6 +53,7 @@ function navGroupsFor(
             overview,
             {
                 label: 'Operasional',
+                icon: Route,
                 items: [
                     {
                         title: 'Pemesanan',
@@ -58,7 +64,8 @@ function navGroupsFor(
                 ],
             },
             {
-                label: 'Laporan & audit',
+                label: 'Laporan & Audit',
+                icon: BarChart3,
                 items: [
                     {
                         title: 'Laporan',
@@ -78,7 +85,8 @@ function navGroupsFor(
     return [
         overview,
         {
-            label: 'Tugas saya',
+            label: 'Persetujuan',
+            icon: ClipboardCheck,
             items: [
                 {
                     title: 'Persetujuan',
@@ -91,11 +99,142 @@ function navGroupsFor(
     ];
 }
 
+type RailLink = {
+    key: string;
+    label: string;
+    href: NavItem['href'];
+    icon: LucideIcon;
+    active: boolean;
+};
+
 /**
- * Kartu aksi cepat di bawah menu: buat pemesanan untuk admin, jumlah
- * antrean persetujuan untuk approver. Disembunyikan saat sidebar diciutkan.
+ * Rail ikon di sisi kiri: logo, modul (kelompok menu), pemilih tema, dan
+ * avatar. Saat sidebar diciutkan, rail menampilkan setiap menu agar semua
+ * halaman tetap bisa dijangkau.
  */
-function QuickAction({
+function AppRail({ groups }: { groups: NavGroup[] }) {
+    const { state } = useSidebar();
+    const isMobile = useIsMobile();
+    const { isCurrentOrParentUrl } = useCurrentUrl();
+    const collapsed = state === 'collapsed' && !isMobile;
+
+    const links: RailLink[] = collapsed
+        ? groups.flatMap((group) =>
+              group.items.map((item) => ({
+                  key: item.title,
+                  label: item.title,
+                  href: item.href,
+                  icon: item.icon ?? group.icon,
+                  active: isCurrentOrParentUrl(item.href),
+              })),
+          )
+        : groups.map((group) => ({
+              key: group.label,
+              label: group.label,
+              href: group.items[0].href,
+              icon: group.icon,
+              active: group.items.some((item) =>
+                  isCurrentOrParentUrl(item.href),
+              ),
+          }));
+
+    return (
+        <div className="flex w-16 shrink-0 flex-col items-center py-3">
+            <Link
+                href={dashboard()}
+                prefetch
+                aria-label="Armada — ke Dashboard"
+                className="group/logo flex size-10 items-center justify-center rounded-xl bg-brand text-brand-foreground shadow-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/40"
+            >
+                <AppLogoIcon className="size-5 transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover/logo:-rotate-6" />
+            </Link>
+
+            <nav
+                aria-label={collapsed ? 'Menu' : 'Modul'}
+                className="mt-8 flex flex-col items-center gap-2"
+            >
+                {links.map((link) => (
+                    <Tooltip key={link.key}>
+                        <TooltipTrigger asChild>
+                            <Link
+                                href={link.href}
+                                prefetch
+                                aria-label={link.label}
+                                className={cn(
+                                    'flex size-10 items-center justify-center rounded-full transition-[background-color,color,box-shadow] duration-300 outline-none focus-visible:ring-[3px] focus-visible:ring-ring/40',
+                                    link.active
+                                        ? 'bg-brand text-brand-foreground shadow-sm'
+                                        : 'text-sidebar-foreground/65 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                                )}
+                            >
+                                <link.icon className="size-[18px]" />
+                            </Link>
+                        </TooltipTrigger>
+                        <TooltipContent side="right">
+                            {link.label}
+                        </TooltipContent>
+                    </Tooltip>
+                ))}
+            </nav>
+
+            <div className="mt-auto flex flex-col items-center gap-4">
+                <div aria-hidden className="h-px w-8 bg-sidebar-border" />
+                <AppearanceToggle orientation="vertical" />
+                <NavUser />
+            </div>
+        </div>
+    );
+}
+
+/**
+ * Pil konteks di atas panel menu. Admin mendapat tombol (+) untuk membuat
+ * pemesanan; approver melihat jumlah antrean persetujuannya.
+ */
+function ContextPill({
+    role,
+    pendingApprovalsCount,
+}: {
+    role: UserRole;
+    pendingApprovalsCount: number | null;
+}) {
+    const admin = role === 'admin';
+
+    return (
+        <div className="flex h-10 items-center justify-between gap-2 rounded-full border border-sidebar-border bg-sidebar-accent/40 pr-1.5 pl-4">
+            <span className="truncate text-[13px] font-semibold text-sidebar-accent-foreground">
+                {admin ? 'Administrasi Pool' : 'Panel Persetujuan'}
+            </span>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Link
+                        href={admin ? bookingsCreate() : approvalsIndex()}
+                        aria-label={
+                            admin
+                                ? 'Buat pemesanan'
+                                : `${pendingApprovalsCount ?? 0} menunggu persetujuan`
+                        }
+                        className="flex size-7 shrink-0 items-center justify-center rounded-full bg-brand text-xs font-semibold text-brand-foreground tabular-nums transition-transform duration-300 ease-[var(--ease-out-expo)] outline-none hover:scale-105 focus-visible:ring-[3px] focus-visible:ring-ring/40"
+                    >
+                        {admin ? (
+                            <Plus className="size-4" />
+                        ) : (
+                            (pendingApprovalsCount ?? 0)
+                        )}
+                    </Link>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                    {admin ? 'Buat pemesanan' : 'Menunggu keputusan Anda'}
+                </TooltipContent>
+            </Tooltip>
+        </div>
+    );
+}
+
+/**
+ * Kartu ajakan di bawah panel menu: rekap laporan untuk admin, antrean
+ * persetujuan untuk approver.
+ */
+function CallToAction({
     role,
     pendingApprovalsCount,
 }: {
@@ -104,50 +243,48 @@ function QuickAction({
 }) {
     const waiting = pendingApprovalsCount ?? 0;
 
+    if (role === 'admin') {
+        return (
+            <div className="rounded-xl border border-brand/30 bg-brand-soft p-4 text-center">
+                <p className="text-[13px] font-semibold text-sidebar-accent-foreground">
+                    Rekap Periodik
+                </p>
+                <p className="mt-1 text-xs text-sidebar-foreground/70">
+                    Unduh laporan pemesanan dalam format Excel untuk periode
+                    yang dibutuhkan.
+                </p>
+                <Button
+                    asChild
+                    size="sm"
+                    className="mt-3 w-full rounded-full bg-brand text-brand-foreground hover:bg-brand/90"
+                >
+                    <Link href={reportsIndex()}>
+                        <FileSpreadsheet />
+                        Buka Laporan
+                    </Link>
+                </Button>
+            </div>
+        );
+    }
+
     return (
-        <div className="mx-2 mb-1 rounded-lg border border-sidebar-border bg-sidebar-accent/50 p-3 group-data-[collapsible=icon]:hidden">
-            {role === 'admin' ? (
-                <>
-                    <p className="text-[13px] font-medium text-sidebar-accent-foreground">
-                        Pemesanan baru
-                    </p>
-                    <p className="mt-1 text-xs text-sidebar-foreground/60">
-                        Catat permintaan kendaraan beserta approver
-                        berjenjangnya.
-                    </p>
-                    <Button asChild size="sm" className="mt-3 w-full">
-                        <Link href={bookingsCreate()}>
-                            <Plus />
-                            Buat pemesanan
-                        </Link>
-                    </Button>
-                </>
-            ) : (
-                <>
-                    <p className="text-[10px] font-medium tracking-[0.16em] text-sidebar-foreground/50 uppercase">
-                        Giliran Anda
-                    </p>
-                    <p className="mt-1 font-display text-3xl font-light text-sidebar-accent-foreground tabular-nums">
-                        <AnimatedNumber value={waiting} />
-                    </p>
-                    <p className="text-xs text-sidebar-foreground/60">
-                        {waiting > 0
-                            ? 'pemesanan menunggu keputusan Anda.'
-                            : 'Tidak ada pemesanan yang menunggu.'}
-                    </p>
-                    {waiting > 0 && (
-                        <Button
-                            asChild
-                            size="sm"
-                            variant="outline"
-                            className="mt-3 w-full"
-                        >
-                            <Link href={approvalsIndex()}>
-                                Buka persetujuan
-                            </Link>
-                        </Button>
-                    )}
-                </>
+        <div className="rounded-xl border border-brand/30 bg-brand-soft p-4 text-center">
+            <p className="text-[13px] font-semibold text-sidebar-accent-foreground">
+                Antrean Persetujuan
+            </p>
+            <p className="mt-1 text-xs text-sidebar-foreground/70">
+                {waiting > 0
+                    ? `${waiting} pemesanan menunggu keputusan Anda.`
+                    : 'Seluruh persetujuan sudah ditangani.'}
+            </p>
+            {waiting > 0 && (
+                <Button
+                    asChild
+                    size="sm"
+                    className="mt-3 w-full rounded-full bg-brand text-brand-foreground hover:bg-brand/90"
+                >
+                    <Link href={approvalsIndex()}>Tinjau Sekarang</Link>
+                </Button>
             )}
         </div>
     );
@@ -159,33 +296,23 @@ export function AppSidebar() {
 
     return (
         <Sidebar collapsible="icon" variant="inset">
-            <SidebarHeader>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton
-                            size="lg"
-                            asChild
-                            className="group/logo"
-                        >
-                            <Link href={dashboard()} prefetch>
-                                <AppLogo />
-                            </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </SidebarHeader>
+            <div className="flex h-full min-h-0 overflow-hidden">
+                <AppRail groups={groups} />
 
-            <SidebarContent className="gap-1 pt-2">
-                <NavMain groups={groups} />
-            </SidebarContent>
-
-            <SidebarFooter className="gap-3">
-                <QuickAction
-                    role={auth.user.role}
-                    pendingApprovalsCount={pendingApprovalsCount}
-                />
-                <NavUser />
-            </SidebarFooter>
+                <div className="flex min-w-0 flex-1 flex-col border-l border-sidebar-border px-3 py-3 group-data-[collapsible=icon]:hidden md:w-[12.5rem] md:flex-none">
+                    <ContextPill
+                        role={auth.user.role}
+                        pendingApprovalsCount={pendingApprovalsCount}
+                    />
+                    <div className="mt-6 min-h-0 flex-1 overflow-y-auto">
+                        <NavMain groups={groups} />
+                    </div>
+                    <CallToAction
+                        role={auth.user.role}
+                        pendingApprovalsCount={pendingApprovalsCount}
+                    />
+                </div>
+            </div>
         </Sidebar>
     );
 }

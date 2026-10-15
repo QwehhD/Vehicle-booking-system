@@ -1,5 +1,5 @@
 import { usePage } from '@inertiajs/react';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import type { AppVariant } from '@/types';
 
@@ -17,5 +17,18 @@ export function AppShell({ children, variant = 'sidebar' }: Props) {
         );
     }
 
-    return <SidebarProvider defaultOpen={isOpen}>{children}</SidebarProvider>;
+    // Rail ikon 4rem ditambah panel menu; saat diciutkan hanya rail.
+    return (
+        <SidebarProvider
+            defaultOpen={isOpen}
+            style={
+                {
+                    '--sidebar-width': '17.5rem',
+                    '--sidebar-width-icon': '4rem',
+                } as CSSProperties
+            }
+        >
+            {children}
+        </SidebarProvider>
+    );
 }

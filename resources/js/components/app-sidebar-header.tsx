@@ -1,5 +1,4 @@
 import { CalendarDays } from 'lucide-react';
-import { AppearanceToggle } from '@/components/appearance-toggle';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
@@ -32,10 +31,7 @@ export function AppSidebarHeader({
                 <Separator orientation="vertical" className="mr-1 h-4!" />
                 <Breadcrumbs breadcrumbs={breadcrumbs} />
             </div>
-            <div className="flex shrink-0 items-center gap-2">
-                <HeaderDate />
-                <AppearanceToggle />
-            </div>
+            <HeaderDate />
             <div
                 aria-hidden
                 className="gradient-rule absolute inset-x-0 -bottom-px opacity-70"
