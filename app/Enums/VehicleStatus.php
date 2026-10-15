@@ -2,8 +2,12 @@
 
 namespace App\Enums;
 
+use App\Enums\Concerns\HasOptions;
+
 enum VehicleStatus: string
 {
+    use HasOptions;
+
     case Available = 'available';
     case Maintenance = 'maintenance';
 

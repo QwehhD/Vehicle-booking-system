@@ -8,6 +8,8 @@ use App\Enums\VehicleType;
 use Carbon\CarbonImmutable;
 use Database\Factories\VehicleFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -79,5 +81,19 @@ class Vehicle extends Model
     public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class);
+    }
+
+    /**
+     * Filter daftar kendaraan; kunci yang kosong diabaikan.
+     *
+     * @param  Builder<self>  $query
+     * @param  array{type?: string|null, ownership?: string|null, location_id?: int|null, status?: string|null}  $filters
+     */
+    #[Scope]
+    protected function filter(Builder $query, array $filters): void
+    {
+        foreach (['type', 'ownership', 'location_id', 'status'] as $column) {
+            $query->when($filters[$column] ?? null, fn (Builder $query, int|string $value) => $query->where($column, $value));
+        }
     }
 }

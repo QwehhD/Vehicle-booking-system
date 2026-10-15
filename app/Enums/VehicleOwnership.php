@@ -2,8 +2,12 @@
 
 namespace App\Enums;
 
+use App\Enums\Concerns\HasOptions;
+
 enum VehicleOwnership: string
 {
+    use HasOptions;
+
     case Owned = 'owned';
     case Rented = 'rented';
 

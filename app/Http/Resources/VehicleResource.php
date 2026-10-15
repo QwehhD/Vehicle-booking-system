@@ -33,6 +33,10 @@ class VehicleResource extends JsonResource
             'status_color' => $this->status->color(),
             'last_service_at' => $this->last_service_at?->toDateString(),
             'next_service_at' => $this->next_service_at?->toDateString(),
+            'days_until_service' => $this->next_service_at === null
+                ? null
+                : (int) today()->diffInDays($this->next_service_at, false),
+            'completed_bookings_count' => $this->whenCounted('completed_bookings'),
             'location' => $this->whenLoaded('location', fn () => [
                 'id' => $this->location->id,
                 'name' => $this->location->name,
