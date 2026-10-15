@@ -2,7 +2,9 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\ActivityAction;
 use App\Models\ActivityLog;
+use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -21,6 +23,8 @@ class ActivityLogResource extends JsonResource
         return [
             'id' => $this->id,
             'action' => $this->action,
+            'action_label' => ActivityAction::tryFrom($this->action)?->label() ?? $this->action,
+            'action_color' => ActivityAction::tryFrom($this->action)?->color() ?? 'slate',
             'description' => $this->description,
             'properties' => $this->properties,
             'ip_address' => $this->ip_address,
@@ -30,6 +34,9 @@ class ActivityLogResource extends JsonResource
                 'id' => $this->user->id,
                 'name' => $this->user->name,
             ]),
+            'booking' => $this->whenLoaded('subject', fn () => $this->subject instanceof Booking
+                ? ['id' => $this->subject->id, 'code' => $this->subject->code]
+                : null),
         ];
     }
 }

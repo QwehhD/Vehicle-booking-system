@@ -5,6 +5,8 @@ namespace App\Models;
 use Carbon\CarbonImmutable;
 use Database\Factories\ActivityLogFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -66,5 +68,27 @@ class ActivityLog extends Model
     public function subject(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    /**
+     * Filter log aktivitas; kunci yang kosong diabaikan.
+     *
+     * @param  Builder<self>  $query
+     * @param  array{search?: string|null, user_id?: int|null, action?: string|null, date_from?: string|null, date_to?: string|null}  $filters
+     */
+    #[Scope]
+    protected function filter(Builder $query, array $filters): void
+    {
+        $query
+            ->when($filters['search'] ?? null, fn (Builder $query, string $search) => $query
+                ->where(fn (Builder $query) => $query
+                    ->where('description', 'like', "%{$search}%")
+                    ->orWhere('ip_address', 'like', "%{$search}%")))
+            ->when($filters['user_id'] ?? null, fn (Builder $query, int $userId) => $query->where('user_id', $userId))
+            ->when($filters['action'] ?? null, fn (Builder $query, string $action) => $query->where('action', $action))
+            ->when($filters['date_from'] ?? null, fn (Builder $query, string $from) => $query
+                ->where('created_at', '>=', CarbonImmutable::parse($from)->startOfDay()))
+            ->when($filters['date_to'] ?? null, fn (Builder $query, string $to) => $query
+                ->where('created_at', '<', CarbonImmutable::parse($to)->addDay()->startOfDay()));
     }
 }
