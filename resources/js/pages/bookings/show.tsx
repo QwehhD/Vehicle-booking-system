@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 import { ApprovalActions } from '@/components/approvals/approval-actions';
 import { ApprovalTimeline } from '@/components/bookings/approval-timeline';
@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatDateTime, formatNumber } from '@/lib/format';
 import { index as approvalsIndex } from '@/routes/approvals';
 import { index, show } from '@/routes/bookings';
+import { show as vehicleShow } from '@/routes/vehicles';
 import type { Auth, BookingShowProps } from '@/types';
 
 export default function BookingsShow({
@@ -18,6 +19,8 @@ export default function BookingsShow({
     can,
     actionableApproval,
 }: BookingShowProps) {
+    const { auth } = usePage().props;
+    const isAdmin = auth.user.role === 'admin';
     const vehicle = booking.vehicle;
     const driver = booking.driver;
 
@@ -98,7 +101,16 @@ export default function BookingsShow({
                             <CardContent>
                                 <dl className="grid gap-4 sm:grid-cols-2">
                                     <Detail label="Kendaraan">
-                                        {vehicle?.plate_number}
+                                        {vehicle && isAdmin ? (
+                                            <Link
+                                                href={vehicleShow(vehicle.id)}
+                                                className="hover:underline"
+                                            >
+                                                {vehicle.plate_number}
+                                            </Link>
+                                        ) : (
+                                            vehicle?.plate_number
+                                        )}
                                         <span className="block text-sm text-muted-foreground">
                                             {vehicle?.name}
                                         </span>
