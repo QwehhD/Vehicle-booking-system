@@ -12,10 +12,22 @@ const OPTIONS: { value: Appearance; label: string; icon: LucideIcon }[] = [
 
 /**
  * Pemilih tampilan terang, gelap, atau mengikuti sistem. Penanda aktif
- * bergeser halus ke pilihan yang dipilih.
+ * bergeser halus ke pilihan yang dipilih, dan pergantian warnanya
+ * disilangkan pelan lewat View Transitions.
  */
-export function AppearanceToggle({ className }: { className?: string }) {
+export function AppearanceToggle({
+    orientation = 'horizontal',
+    className,
+}: {
+    orientation?: 'horizontal' | 'vertical';
+    className?: string;
+}) {
     const { appearance, updateAppearance } = useAppearance();
+    const vertical = orientation === 'vertical';
+    const active = Math.max(
+        0,
+        OPTIONS.findIndex((option) => option.value === appearance),
+    );
 
     const choose = (value: Appearance) => {
         const root = document.documentElement;
@@ -29,30 +41,38 @@ export function AppearanceToggle({ className }: { className?: string }) {
             return;
         }
 
-        // Warna lama dan baru disilangkan pelan, bukan berganti mendadak.
         root.classList.add('theme-switching');
         void document
             .startViewTransition(() => updateAppearance(value))
             .finished.finally(() => root.classList.remove('theme-switching'));
     };
-    const active = Math.max(
-        0,
-        OPTIONS.findIndex((option) => option.value === appearance),
-    );
 
     return (
         <div
             role="radiogroup"
             aria-label="Tampilan"
+            aria-orientation={orientation}
             className={cn(
-                'relative grid h-8 grid-cols-3 rounded-md border bg-background/60 p-0.5',
+                'relative grid border p-0.5',
+                vertical
+                    ? 'w-9 grid-rows-3 gap-0 rounded-full bg-sidebar-accent/40'
+                    : 'h-8 grid-cols-3 rounded-md bg-background/60',
                 className,
             )}
         >
             <span
                 aria-hidden
-                className="absolute inset-y-0.5 left-0.5 w-[calc((100%-4px)/3)] rounded-sm bg-accent shadow-xs transition-transform duration-300 ease-[var(--ease-out-expo)]"
-                style={{ transform: `translateX(${active * 100}%)` }}
+                className={cn(
+                    'absolute shadow-xs transition-transform duration-300 ease-[var(--ease-out-expo)]',
+                    vertical
+                        ? 'inset-x-0.5 top-0.5 h-[calc((100%-4px)/3)] rounded-full bg-brand'
+                        : 'inset-y-0.5 left-0.5 w-[calc((100%-4px)/3)] rounded-sm bg-accent',
+                )}
+                style={{
+                    transform: vertical
+                        ? `translateY(${active * 100}%)`
+                        : `translateX(${active * 100}%)`,
+                }}
             />
             {OPTIONS.map(({ value, label, icon: Icon }) => (
                 <button
@@ -64,8 +84,12 @@ export function AppearanceToggle({ className }: { className?: string }) {
                     title={label}
                     onClick={() => choose(value)}
                     className={cn(
-                        'relative z-10 flex w-8 items-center justify-center rounded-sm text-muted-foreground transition-colors duration-200 outline-none hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/40',
-                        appearance === value && 'text-foreground',
+                        'relative z-10 flex items-center justify-center text-muted-foreground transition-colors duration-200 outline-none hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/40',
+                        vertical ? 'size-8 rounded-full' : 'w-8 rounded-sm',
+                        appearance === value &&
+                            (vertical
+                                ? 'text-brand-foreground hover:text-brand-foreground'
+                                : 'text-foreground'),
                     )}
                 >
                     <Icon className="size-3.5" />
