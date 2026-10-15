@@ -53,7 +53,7 @@ export default function BookingsIndex({
                     regions={regions}
                 />
 
-                <LoadingRegion className="rounded-xl border">
+                <LoadingRegion className="reveal overflow-hidden rounded-lg border bg-card [--stagger:2]">
                     <Table>
                         <TableHeader>
                             <TableRow>

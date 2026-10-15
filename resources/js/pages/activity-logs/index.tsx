@@ -42,7 +42,7 @@ export default function ActivityLogsIndex({
                     actions={actions}
                 />
 
-                <LoadingRegion className="rounded-xl border">
+                <LoadingRegion className="reveal overflow-hidden rounded-lg border bg-card [--stagger:2]">
                     <Table>
                         <TableHeader>
                             <TableRow>

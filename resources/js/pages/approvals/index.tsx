@@ -54,7 +54,7 @@ export default function ApprovalsIndex({
                     <TabsContent value={tab}>
                         <LoadingRegion className="grid grid-cols-1 gap-4">
                             {approvals.data.length === 0 ? (
-                                <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed px-4 py-12 text-center text-muted-foreground">
+                                <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed px-4 py-12 text-center text-muted-foreground">
                                     <Inbox className="size-8" />
                                     <p className="text-sm">
                                         {EMPTY_MESSAGES[tab]}
