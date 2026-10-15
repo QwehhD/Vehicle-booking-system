@@ -16,7 +16,7 @@ Dibuat sebagai technical test Fullstack Developer (Intern) dengan Laravel 13, In
 - **Laporan periodik** dengan preset periode dan **export Excel** 2 sheet (_Pemesanan_ dan _Ringkasan_).
 - **Log aktivitas** setiap proses: tersimpan di database dan di file log harian, dengan halaman pencarian dan dialog detail.
 - **Kendaraan** (bonus): daftar dengan filter, serta detail berisi jadwal service, total km/BBM, dan riwayat pemakaian.
-- **UI** berbahasa Indonesia, waktu WIB, responsif sampai lebar 375px, mode gelap mengikuti sistem, dan halaman error 403/404 berbahasa Indonesia.
+- **UI** berbahasa Indonesia, waktu WIB, responsif sampai lebar 375px, mode gelap sebagai bawaan dengan pilihan terang/gelap/sistem, dan halaman error 403/404 berbahasa Indonesia.
 
 ## Versi
 
@@ -112,6 +112,17 @@ Password semua akun: `password`.
     Untuk pengembangan, `composer run dev` menjalankan server, queue worker, log (Pail), dan Vite dev server sekaligus.
 
 Data demo bisa direset kapan saja dengan `php artisan migrate:fresh --seed`. Tanggal pemesanan dibuat relatif terhadap hari ini (6 bulan ke belakang sampai 2 minggu ke depan), sehingga dashboard selalu berisi.
+
+**Produksi.** Sebelum dipasang di server, ubah `.env` berikut agar detail error tidak tampil ke pengguna dan cookie hanya dikirim lewat HTTPS:
+
+```dotenv
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://domain-anda
+SESSION_SECURE_COOKIE=true
+```
+
+Lalu jalankan `npm run build` dan `php artisan optimize`. Aplikasi sudah mengirim header keamanan (`X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`) di setiap respons, ditambah `Strict-Transport-Security` saat diakses lewat HTTPS.
 
 ## Panduan penggunaan
 
