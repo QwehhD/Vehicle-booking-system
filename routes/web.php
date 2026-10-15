@@ -2,13 +2,15 @@
 
 use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ReportController;
 use App\Models\Booking;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => to_route('dashboard'))->name('home');
 
 Route::middleware('auth')->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
+    Route::get('dashboard', DashboardController::class)->name('dashboard');
 
     Route::middleware('role:admin')->group(function () {
         Route::get('bookings', [BookingController::class, 'index'])
@@ -27,7 +29,8 @@ Route::middleware('auth')->group(function () {
             ->can('complete', 'booking')
             ->name('bookings.complete');
 
-        Route::inertia('reports', 'reports/index')->name('reports.index');
+        Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+        Route::get('reports/export', [ReportController::class, 'export'])->name('reports.export');
         Route::inertia('activity-logs', 'activity-logs/index')->name('activity-logs.index');
         Route::inertia('vehicles', 'vehicles/index')->name('vehicles.index');
     });
