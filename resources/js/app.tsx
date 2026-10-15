@@ -19,6 +19,16 @@ void createInertiaApp({
                 return AppLayout;
         }
     },
+    defaults: {
+        // Animasi antarhalaman hanya untuk navigasi ke halaman lain, bukan
+        // untuk kunjungan yang mempertahankan state seperti filter dan tab.
+        visitOptions: (_href, options) => ({
+            ...options,
+            viewTransition:
+                options.viewTransition ||
+                (options.method === 'get' && !options.preserveState),
+        }),
+    },
     strictMode: true,
     withApp(app) {
         return (
