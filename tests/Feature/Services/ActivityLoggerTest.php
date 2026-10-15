@@ -52,3 +52,14 @@ test('stores empty properties as null', function () {
 
     expect($activity->fresh()->properties)->toBeNull();
 });
+
+test('truncates descriptions that do not fit the column', function () {
+    $activity = app(ActivityLogger::class)->log(
+        'booking.created',
+        null,
+        'Admin membuat pemesanan untuk '.str_repeat('N', 300),
+    );
+
+    expect(mb_strlen($activity->fresh()->description))->toBe(255)
+        ->and($activity->description)->toEndWith('…');
+});

@@ -7,9 +7,16 @@ use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Log\LogManager;
+use Illuminate\Support\Str;
 
 class ActivityLogger
 {
+    /**
+     * Panjang kolom activity_logs.description (varchar 255). Deskripsi yang
+     * memuat input pengguna dipotong agar tidak gagal disimpan di MySQL/MariaDB.
+     */
+    private const DESCRIPTION_LENGTH = 255;
+
     public function __construct(
         private AuthFactory $auth,
         private Request $request,
@@ -23,6 +30,8 @@ class ActivityLogger
      */
     public function log(string $action, ?Model $subject, string $description, array $properties = []): ActivityLog
     {
+        $description = Str::limit($description, self::DESCRIPTION_LENGTH - 1, '…');
+
         $activity = ActivityLog::create([
             'user_id' => $this->auth->guard()->id(),
             'action' => $action,
