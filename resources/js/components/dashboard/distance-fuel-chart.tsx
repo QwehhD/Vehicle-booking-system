@@ -14,13 +14,13 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { SERIES } from '@/lib/chart-palette';
+import { SINGLE_SERIES } from '@/lib/chart-palette';
 import { formatNumber } from '@/lib/format';
 import type { MonthlyUsage } from '@/types';
 
 const config = {
-    distance: { label: 'Jarak tempuh (km)', theme: SERIES.blue },
-    fuel: { label: 'BBM (liter)', theme: SERIES.orange },
+    distance: { label: 'Jarak tempuh (km)', theme: SINGLE_SERIES },
+    fuel: { label: 'BBM (liter)', theme: SINGLE_SERIES },
 } satisfies ChartConfig;
 
 /**
@@ -77,15 +77,18 @@ function Panel({
 export function DistanceFuelChart({
     data,
     className,
+    index,
 }: {
     data: MonthlyUsage[];
     className?: string;
+    index?: number;
 }) {
     return (
         <ChartCard
             title="Jarak tempuh & konsumsi BBM"
             description="Per bulan dari pemesanan yang sudah selesai."
             className={className}
+            index={index}
             chart={
                 <div className="grid gap-4">
                     <Panel

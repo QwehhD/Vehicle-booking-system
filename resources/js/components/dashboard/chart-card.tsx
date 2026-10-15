@@ -1,5 +1,5 @@
 import { BarChart3, Table2 } from 'lucide-react';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -17,6 +17,7 @@ type Props = {
     chart: ReactNode;
     table: ReactNode;
     className?: string;
+    index?: number;
 };
 
 /**
@@ -28,11 +29,15 @@ export function ChartCard({
     chart,
     table,
     className,
+    index = 0,
 }: Props) {
     const [view, setView] = useState<'chart' | 'table'>('chart');
 
     return (
-        <Card className={cn('gap-4', className)}>
+        <Card
+            className={cn('reveal gap-4', className)}
+            style={{ '--stagger': index } as CSSProperties}
+        >
             <CardHeader className="flex flex-row items-start justify-between gap-4">
                 <div className="grid gap-1.5">
                     <CardTitle>{title}</CardTitle>
@@ -41,7 +46,7 @@ export function ChartCard({
                     )}
                 </div>
                 <div
-                    className="flex shrink-0 rounded-md border p-0.5"
+                    className="flex shrink-0 rounded-sm border p-0.5"
                     role="group"
                     aria-label="Tampilan"
                 >
@@ -69,7 +74,14 @@ export function ChartCard({
                     </Button>
                 </div>
             </CardHeader>
-            <CardContent>{view === 'chart' ? chart : table}</CardContent>
+            <CardContent>
+                <div
+                    key={view}
+                    className="animate-in duration-500 ease-[var(--ease-out-expo)] fade-in-0 slide-in-from-bottom-1"
+                >
+                    {view === 'chart' ? chart : table}
+                </div>
+            </CardContent>
         </Card>
     );
 }

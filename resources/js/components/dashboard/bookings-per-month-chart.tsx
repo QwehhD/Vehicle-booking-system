@@ -41,16 +41,19 @@ export function BookingsPerMonthChart({
     data,
     year,
     className,
+    index,
 }: {
     data: MonthlyBookings[];
     year: number;
     className?: string;
+    index?: number;
 }) {
     return (
         <ChartCard
             title="Pemesanan per bulan"
             description={`Jumlah pemesanan menurut bulan mulai dan status, ${year}.`}
             className={className}
+            index={index}
             chart={
                 data.every((row) => total(row) === 0) ? (
                     <p className="py-12 text-center text-sm text-muted-foreground">

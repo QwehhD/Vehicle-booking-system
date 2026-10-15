@@ -10,7 +10,15 @@ export const SERIES = {
     yellow: { light: '#eda100', dark: '#c98500' },
     violet: { light: '#6250d6', dark: '#9085e9' },
     red: { light: '#e34948', dark: '#e66767' },
+    sage: { light: '#3f8f5a', dark: '#5a9e6c' },
+    rose: { light: '#d0607f', dark: '#d4688b' },
 } as const;
+
+/**
+ * Warna grafik satu seri: sage dari gradasi merek. Tidak dipakai untuk
+ * membedakan kategori.
+ */
+export const SINGLE_SERIES = SERIES.sage;
 
 /**
  * Status pemesanan dari bawah ke atas pada grafik bertumpuk.

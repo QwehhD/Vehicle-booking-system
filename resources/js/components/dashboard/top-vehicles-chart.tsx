@@ -10,12 +10,12 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { SERIES } from '@/lib/chart-palette';
+import { SINGLE_SERIES } from '@/lib/chart-palette';
 import { formatNumber } from '@/lib/format';
 import type { TopVehicle } from '@/types';
 
 const config = {
-    bookings: { label: 'Pemakaian', theme: SERIES.blue },
+    bookings: { label: 'Pemakaian', theme: SINGLE_SERIES },
 } satisfies ChartConfig;
 
 function VehicleTooltip({
@@ -32,7 +32,7 @@ function VehicleTooltip({
     }
 
     return (
-        <div className="grid min-w-40 gap-1 rounded-lg border bg-background px-2.5 py-1.5 text-xs shadow-xl">
+        <div className="grid min-w-40 gap-1 rounded-md border bg-popover px-2.5 py-1.5 text-xs shadow-lg">
             <div className="font-medium">{vehicle.plate_number}</div>
             <div className="text-muted-foreground">{vehicle.name}</div>
             <div className="flex justify-between gap-4">
@@ -54,15 +54,18 @@ function VehicleTooltip({
 export function TopVehiclesChart({
     data,
     className,
+    index,
 }: {
     data: TopVehicle[];
     className?: string;
+    index?: number;
 }) {
     return (
         <ChartCard
             title="Kendaraan paling sering dipakai"
             description="10 teratas dari pemesanan disetujui dan selesai."
             className={className}
+            index={index}
             chart={
                 data.length === 0 ? (
                     <p className="py-12 text-center text-sm text-muted-foreground">

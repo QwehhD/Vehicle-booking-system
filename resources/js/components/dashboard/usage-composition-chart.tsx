@@ -18,7 +18,7 @@ import { SERIES } from '@/lib/chart-palette';
 import { formatNumber } from '@/lib/format';
 import type { CompositionSlice } from '@/types';
 
-const SLICE_THEMES = [SERIES.blue, SERIES.orange];
+const SLICE_THEMES = [SERIES.blue, SERIES.rose];
 
 function percent(value: number, total: number): string {
     return total === 0 ? '0%' : `${Math.round((value / total) * 100)}%`;
@@ -125,16 +125,19 @@ export function UsageCompositionChart({
     type,
     ownership,
     className,
+    index,
 }: {
     type: CompositionSlice[];
     ownership: CompositionSlice[];
     className?: string;
+    index?: number;
 }) {
     return (
         <ChartCard
             title="Komposisi pemakaian"
             description="Pemesanan disetujui dan selesai."
             className={className}
+            index={index}
             chart={
                 type.every((slice) => slice.value === 0) ? (
                     <p className="py-12 text-center text-sm text-muted-foreground">
