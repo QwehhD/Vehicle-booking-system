@@ -91,7 +91,7 @@ function DecisionDialog({
                     className={
                         isApprove
                             ? undefined
-                            : 'text-destructive hover:text-destructive'
+                            : 'border-destructive-foreground/40 text-destructive-foreground hover:border-destructive-foreground hover:text-destructive-foreground'
                     }
                 >
                     {isApprove ? <Check /> : <X />}
