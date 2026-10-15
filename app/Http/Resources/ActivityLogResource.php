@@ -20,6 +20,10 @@ class ActivityLogResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        // IP dan user agent hanya untuk admin; approver yang melihat riwayat
+        // pemesanan tidak perlu tahu perangkat dan jaringan pengguna lain.
+        $isAdmin = $request->user()?->isAdmin() ?? false;
+
         return [
             'id' => $this->id,
             'action' => $this->action,
@@ -27,8 +31,8 @@ class ActivityLogResource extends JsonResource
             'action_color' => ActivityAction::tryFrom($this->action)?->color() ?? 'slate',
             'description' => $this->description,
             'properties' => $this->properties,
-            'ip_address' => $this->ip_address,
-            'user_agent' => $this->user_agent,
+            'ip_address' => $isAdmin ? $this->ip_address : null,
+            'user_agent' => $isAdmin ? $this->user_agent : null,
             'created_at' => $this->created_at->toIso8601String(),
             'user' => $this->whenLoaded('user', fn () => $this->user === null ? null : [
                 'id' => $this->user->id,
