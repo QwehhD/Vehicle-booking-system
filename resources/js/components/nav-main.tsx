@@ -10,36 +10,53 @@ import {
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import type { NavItem } from '@/types';
 
-export function NavMain({ items }: { items: NavItem[] }) {
+export type NavGroup = {
+    label: string;
+    items: NavItem[];
+};
+
+/**
+ * Menu sidebar per kelompok. Ikon tiap menu berada di kotak kecil yang
+ * terisi warna aksen saat menu aktif.
+ */
+export function NavMain({ groups }: { groups: NavGroup[] }) {
     const { isCurrentOrParentUrl } = useCurrentUrl();
 
     return (
-        <SidebarGroup className="px-2 py-0">
-            <SidebarGroupLabel className="text-[10px] font-medium tracking-[0.18em] text-sidebar-foreground/45 uppercase">
-                Menu
-            </SidebarGroupLabel>
-            <SidebarMenu>
-                {items.map((item) => (
-                    <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton
-                            asChild
-                            isActive={isCurrentOrParentUrl(item.href)}
-                            tooltip={{ children: item.title }}
-                            className="relative h-10 text-xs font-medium tracking-[0.12em] uppercase before:absolute before:inset-y-2 before:left-0 before:w-0.5 before:scale-y-0 before:bg-gradient-to-b before:from-[var(--grad-1)] before:via-[var(--grad-2)] before:to-[var(--grad-3)] before:transition-transform before:duration-500 before:ease-[var(--ease-out-expo)] group-data-[collapsible=icon]:before:hidden data-[active=true]:before:scale-y-100"
-                        >
-                            <Link href={item.href} prefetch>
-                                {item.icon && <item.icon />}
-                                <span>{item.title}</span>
-                            </Link>
-                        </SidebarMenuButton>
-                        {item.badge ? (
-                            <SidebarMenuBadge className="top-2.5 rounded-sm bg-gradient-to-r from-[var(--grad-1)] to-[var(--grad-2)] px-1.5 font-semibold text-sidebar-primary-foreground tabular-nums peer-hover/menu-button:text-sidebar-primary-foreground peer-data-[active=true]/menu-button:text-sidebar-primary-foreground">
-                                {item.badge}
-                            </SidebarMenuBadge>
-                        ) : null}
-                    </SidebarMenuItem>
-                ))}
-            </SidebarMenu>
-        </SidebarGroup>
+        <>
+            {groups.map((group) => (
+                <SidebarGroup key={group.label} className="px-2 py-1">
+                    <SidebarGroupLabel className="text-[10px] font-medium tracking-[0.16em] text-sidebar-foreground/45 uppercase">
+                        {group.label}
+                    </SidebarGroupLabel>
+                    <SidebarMenu className="gap-0.5">
+                        {group.items.map((item) => (
+                            <SidebarMenuItem key={item.title}>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={isCurrentOrParentUrl(item.href)}
+                                    tooltip={{ children: item.title }}
+                                    className="group/menu-button h-10 gap-3 rounded-md px-1.5 text-[13px] font-medium text-sidebar-foreground/80 group-data-[collapsible=icon]:p-1! hover:text-sidebar-accent-foreground data-[active=true]:font-semibold"
+                                >
+                                    <Link href={item.href} prefetch>
+                                        {item.icon && (
+                                            <span className="flex size-7 shrink-0 items-center justify-center rounded-md border border-sidebar-border bg-sidebar text-sidebar-foreground/70 transition-colors duration-300 group-hover/menu-button:text-sidebar-accent-foreground group-data-[active=true]/menu-button:border-transparent group-data-[active=true]/menu-button:bg-brand group-data-[active=true]/menu-button:text-brand-foreground">
+                                                <item.icon className="size-4" />
+                                            </span>
+                                        )}
+                                        <span>{item.title}</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                                {item.badge ? (
+                                    <SidebarMenuBadge className="top-2.5 rounded-sm bg-brand px-1.5 font-semibold text-brand-foreground tabular-nums peer-hover/menu-button:text-brand-foreground peer-data-[active=true]/menu-button:text-brand-foreground">
+                                        {item.badge}
+                                    </SidebarMenuBadge>
+                                ) : null}
+                            </SidebarMenuItem>
+                        ))}
+                    </SidebarMenu>
+                </SidebarGroup>
+            ))}
+        </>
     );
 }
