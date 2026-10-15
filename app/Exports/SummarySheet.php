@@ -10,6 +10,7 @@ use App\Services\BookingReportQuery;
 use Carbon\CarbonImmutable;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 use Maatwebsite\Excel\Concerns\WithStyles;
@@ -21,8 +22,10 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
  * Sheet ringkasan: periode, pencetak, jumlah per status, total km & BBM,
  * dan lima kendaraan yang paling sering dipakai.
  */
-class SummarySheet implements FromArray, ShouldAutoSize, WithEvents, WithStrictNullComparison, WithStyles, WithTitle
+class SummarySheet implements FromArray, ShouldAutoSize, WithCustomValueBinder, WithEvents, WithStrictNullComparison, WithStyles, WithTitle
 {
+    use BindsTextAsString;
+
     /**
      * @var list<list<mixed>>
      */

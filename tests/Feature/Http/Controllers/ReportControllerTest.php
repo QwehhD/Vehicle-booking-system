@@ -5,6 +5,7 @@ use App\Models\Booking;
 use App\Models\User;
 use App\Models\Vehicle;
 use Inertia\Testing\AssertableInertia as Assert;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -65,6 +66,25 @@ describe('export', function () {
             ->assertOk()
             ->assertDownload('laporan-pemesanan_2026-10-01_2026-10-31.xlsx')
             ->assertHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    });
+
+    test('stores user input as text so spreadsheet formulas are never executed', function () {
+        Booking::factory()->create([
+            'requester_name' => '=1+1',
+            'purpose' => '=HYPERLINK("http://evil.test","Klik di sini")',
+            'start_at' => '2026-10-05 08:00:00',
+            'end_at' => '2026-10-05 12:00:00',
+        ]);
+
+        $response = $this->actingAs(User::factory()->admin()->create())
+            ->get(route('reports.export', ['date_from' => '2026-10-01', 'date_to' => '2026-10-31']));
+
+        $sheet = IOFactory::load($response->baseResponse->getFile()->getPathname())->getSheetByName('Pemesanan');
+
+        expect($sheet->getCell('D2')->getDataType())->toBe(DataType::TYPE_STRING)
+            ->and($sheet->getCell('D2')->getValue())->toBe('=1+1')
+            ->and($sheet->getCell('F2')->getDataType())->toBe(DataType::TYPE_STRING)
+            ->and($sheet->getCell('A2')->getDataType())->toBe(DataType::TYPE_NUMERIC);
     });
 
     test('writes the filtered bookings and a summary sheet', function () {

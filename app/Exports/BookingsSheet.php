@@ -11,6 +11,7 @@ use InvalidArgumentException;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithFreezePane;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -25,8 +26,10 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 /**
  * Sheet detail: satu baris per pemesanan, header beku dan ber-autofilter.
  */
-class BookingsSheet implements FromCollection, ShouldAutoSize, WithColumnFormatting, WithEvents, WithFreezePane, WithHeadings, WithMapping, WithStrictNullComparison, WithStyles, WithTitle
+class BookingsSheet implements FromCollection, ShouldAutoSize, WithColumnFormatting, WithCustomValueBinder, WithEvents, WithFreezePane, WithHeadings, WithMapping, WithStrictNullComparison, WithStyles, WithTitle
 {
+    use BindsTextAsString;
+
     private const DATE_TIME_FORMAT = 'dd/mm/yyyy hh:mm';
 
     private int $rowNumber = 0;
