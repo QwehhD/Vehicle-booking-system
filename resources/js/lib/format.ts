@@ -30,6 +30,11 @@ const MONTHS_LONG = [
     'Desember',
 ];
 
+const weekdayFormatter = new Intl.DateTimeFormat('id-ID', {
+    timeZone: TIME_ZONE,
+    weekday: 'long',
+});
+
 const partsFormatter = new Intl.DateTimeFormat('en-GB', {
     timeZone: TIME_ZONE,
     year: 'numeric',
@@ -61,9 +66,11 @@ function parts(value: string | Date) {
  * Bagian tanggal WIB untuk tampilan besar, mis. 15 / Oktober / 2026.
  */
 export function longDateParts(value: string | Date) {
-    const { year, month, day } = parts(value);
+    const date = typeof value === 'string' ? new Date(value) : value;
+    const { year, month, day } = parts(date);
 
     return {
+        weekday: weekdayFormatter.format(date),
         day: String(day),
         month: MONTHS_LONG[month - 1],
         year,
