@@ -28,6 +28,7 @@ const config = Object.fromEntries(
 ) satisfies ChartConfig;
 
 const lastSeries = BOOKING_STATUS_SERIES.length - 1;
+const stackOrder: string[] = BOOKING_STATUS_SERIES.map((series) => series.key);
 
 function total(row: MonthlyBookings): number {
     return BOOKING_STATUS_SERIES.reduce(
@@ -51,46 +52,62 @@ export function BookingsPerMonthChart({
             description={`Jumlah pemesanan menurut bulan mulai dan status, ${year}.`}
             className={className}
             chart={
-                <ChartContainer
-                    config={config}
-                    className="aspect-auto h-72 w-full"
-                >
-                    <BarChart
-                        data={data}
-                        margin={{ top: 8, left: -20, right: 4 }}
+                data.every((row) => total(row) === 0) ? (
+                    <p className="py-12 text-center text-sm text-muted-foreground">
+                        Belum ada pemesanan pada tahun dan region ini.
+                    </p>
+                ) : (
+                    <ChartContainer
+                        config={config}
+                        className="aspect-auto h-72 w-full"
                     >
-                        <CartesianGrid vertical={false} />
-                        <XAxis
-                            dataKey="label"
-                            tickLine={false}
-                            axisLine={false}
-                            tickMargin={8}
-                        />
-                        <YAxis
-                            allowDecimals={false}
-                            tickLine={false}
-                            axisLine={false}
-                            width={48}
-                        />
-                        <ChartTooltip
-                            cursor={{ fillOpacity: 0.4 }}
-                            content={<ChartTooltipContent />}
-                        />
-                        <ChartLegend content={<ChartLegendContent />} />
-                        {BOOKING_STATUS_SERIES.map((series, index) => (
-                            <Bar
-                                key={series.key}
-                                dataKey={series.key}
-                                stackId="status"
-                                fill={`var(--color-${series.key})`}
-                                stroke="var(--card)"
-                                strokeWidth={2}
-                                maxBarSize={32}
-                                radius={index === lastSeries ? [4, 4, 0, 0] : 0}
+                        <BarChart
+                            data={data}
+                            margin={{ top: 8, left: -20, right: 4 }}
+                        >
+                            <CartesianGrid vertical={false} />
+                            <XAxis
+                                dataKey="label"
+                                tickLine={false}
+                                axisLine={false}
+                                tickMargin={8}
                             />
-                        ))}
-                    </BarChart>
-                </ChartContainer>
+                            <YAxis
+                                allowDecimals={false}
+                                tickLine={false}
+                                axisLine={false}
+                                width={48}
+                            />
+                            <ChartTooltip
+                                cursor={{ fillOpacity: 0.4 }}
+                                itemSorter={(item) =>
+                                    stackOrder.indexOf(String(item.dataKey))
+                                }
+                                content={<ChartTooltipContent />}
+                            />
+                            <ChartLegend
+                                itemSorter={null}
+                                content={
+                                    <ChartLegendContent className="flex-wrap gap-x-4 gap-y-1" />
+                                }
+                            />
+                            {BOOKING_STATUS_SERIES.map((series, index) => (
+                                <Bar
+                                    key={series.key}
+                                    dataKey={series.key}
+                                    stackId="status"
+                                    fill={`var(--color-${series.key})`}
+                                    stroke="var(--card)"
+                                    strokeWidth={2}
+                                    maxBarSize={32}
+                                    radius={
+                                        index === lastSeries ? [4, 4, 0, 0] : 0
+                                    }
+                                />
+                            ))}
+                        </BarChart>
+                    </ChartContainer>
+                )
             }
             table={
                 <Table>

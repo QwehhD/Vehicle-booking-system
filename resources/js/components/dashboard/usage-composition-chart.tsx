@@ -136,10 +136,18 @@ export function UsageCompositionChart({
             description="Pemesanan disetujui dan selesai."
             className={className}
             chart={
-                <div className="grid gap-6 sm:grid-cols-2">
-                    <Donut title="Jenis kendaraan" slices={type} />
-                    <Donut title="Kepemilikan" slices={ownership} />
-                </div>
+                type.every((slice) => slice.value === 0) ? (
+                    <p className="py-12 text-center text-sm text-muted-foreground">
+                        Belum ada pemakaian kendaraan pada filter ini.
+                    </p>
+                ) : (
+                    <div className="@container">
+                        <div className="grid gap-6 @sm:grid-cols-2">
+                            <Donut title="Jenis kendaraan" slices={type} />
+                            <Donut title="Kepemilikan" slices={ownership} />
+                        </div>
+                    </div>
+                )
             }
             table={
                 <Table>

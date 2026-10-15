@@ -14,6 +14,7 @@ import { BookingsPerMonthChart } from '@/components/dashboard/bookings-per-month
 import { DashboardFilters } from '@/components/dashboard/dashboard-filters';
 import { DistanceFuelChart } from '@/components/dashboard/distance-fuel-chart';
 import { ServiceDueTable } from '@/components/dashboard/service-due-table';
+import { LoadingRegion } from '@/components/loading-region';
 import { StatCard } from '@/components/stat-card';
 import { TopVehiclesChart } from '@/components/dashboard/top-vehicles-chart';
 import { UsageCompositionChart } from '@/components/dashboard/usage-composition-chart';
@@ -51,11 +52,16 @@ export default function Dashboard({
                     />
                 </div>
 
-                {dashboard.view === 'admin' ? (
-                    <AdminDashboard data={dashboard} year={filters.year} />
-                ) : (
-                    <ApproverDashboard data={dashboard} year={filters.year} />
-                )}
+                <LoadingRegion className="flex flex-col gap-6">
+                    {dashboard.view === 'admin' ? (
+                        <AdminDashboard data={dashboard} year={filters.year} />
+                    ) : (
+                        <ApproverDashboard
+                            data={dashboard}
+                            year={filters.year}
+                        />
+                    )}
+                </LoadingRegion>
             </div>
         </>
     );
@@ -108,14 +114,14 @@ function AdminDashboard({ data, year }: { data: AdminData; year: number }) {
                     year={year}
                     className="xl:col-span-2"
                 />
+                <TopVehiclesChart data={data.topVehicles} />
+            </div>
+
+            <div className="grid gap-6 xl:grid-cols-2">
                 <UsageCompositionChart
                     type={data.composition.type}
                     ownership={data.composition.ownership}
                 />
-            </div>
-
-            <div className="grid gap-6 xl:grid-cols-2">
-                <TopVehiclesChart data={data.topVehicles} />
                 <DistanceFuelChart data={data.distanceAndFuel} />
             </div>
 

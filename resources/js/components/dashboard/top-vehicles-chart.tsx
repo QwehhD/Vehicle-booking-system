@@ -91,7 +91,7 @@ export function TopVehiclesChart({
                                 dataKey="plate_number"
                                 tickLine={false}
                                 axisLine={false}
-                                width={84}
+                                width={96}
                             />
                             <ChartTooltip
                                 cursor={{ fillOpacity: 0.4 }}
