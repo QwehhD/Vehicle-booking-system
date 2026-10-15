@@ -12,7 +12,7 @@ import Heading from '@/components/heading';
 import { LoadingRegion } from '@/components/loading-region';
 import { Pagination } from '@/components/pagination';
 import { ReportFilters } from '@/components/reports/report-filters';
-import { StatCard } from '@/components/stat-card';
+import { StatCard, StatGrid } from '@/components/stat-card';
 import { StatusBadge } from '@/components/status-badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -23,7 +23,12 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { formatDate, formatNumber, formatSchedule } from '@/lib/format';
+import {
+    formatDate,
+    formatLiters,
+    formatNumber,
+    formatSchedule,
+} from '@/lib/format';
 import { show } from '@/routes/bookings';
 import { exportMethod, index } from '@/routes/reports';
 import type { ReportFilters as Filters, ReportIndexProps } from '@/types';
@@ -73,43 +78,44 @@ export default function ReportsIndex({
                 />
 
                 <LoadingRegion className="grid grid-cols-1 gap-6">
-                    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
+                    <StatGrid className="reveal grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
                         <StatCard
                             label="Jumlah pemesanan"
-                            value={formatNumber(summary.total)}
+                            value={summary.total}
                             hint={period}
                             icon={CalendarCheck}
                         />
                         <StatCard
                             label="Disetujui + selesai"
-                            value={formatNumber(summary.approved_or_completed)}
+                            value={summary.approved_or_completed}
                             icon={CircleCheck}
                         />
                         <StatCard
                             label="Ditolak"
-                            value={formatNumber(summary.rejected)}
+                            value={summary.rejected}
                             icon={XCircle}
                         />
                         <StatCard
                             label="Dibatalkan"
-                            value={formatNumber(summary.cancelled)}
+                            value={summary.cancelled}
                             icon={Ban}
                         />
                         <StatCard
                             label="Total km"
-                            value={formatNumber(summary.distance)}
+                            value={summary.distance}
                             hint="Pemesanan selesai"
                             icon={Gauge}
                         />
                         <StatCard
                             label="Total BBM"
-                            value={`${formatNumber(summary.fuel, 2)} L`}
+                            value={summary.fuel}
+                            format={formatLiters}
                             hint="Pemesanan selesai"
                             icon={Fuel}
                         />
-                    </div>
+                    </StatGrid>
 
-                    <div className="rounded-xl border">
+                    <div className="reveal overflow-hidden rounded-lg border bg-card [--stagger:2]">
                         <Table>
                             <TableHeader>
                                 <TableRow>

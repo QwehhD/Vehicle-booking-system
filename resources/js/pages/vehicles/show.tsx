@@ -3,7 +3,7 @@ import { Fuel, Gauge, Route, Timer } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { LoadingRegion } from '@/components/loading-region';
 import { Pagination } from '@/components/pagination';
-import { StatCard } from '@/components/stat-card';
+import { StatCard, StatGrid } from '@/components/stat-card';
 import { StatusBadge } from '@/components/status-badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -15,7 +15,13 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { ServiceDue } from '@/components/vehicles/service-due';
-import { formatDate, formatNumber, formatSchedule } from '@/lib/format';
+import {
+    formatDate,
+    formatKm,
+    formatLiters,
+    formatNumber,
+    formatSchedule,
+} from '@/lib/format';
 import { show as bookingShow } from '@/routes/bookings';
 import { index, show } from '@/routes/vehicles';
 import type { VehicleShowProps } from '@/types';
@@ -44,20 +50,22 @@ export default function VehiclesShow({
                     </p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                <StatGrid className="reveal grid-cols-2 lg:grid-cols-4">
                     <StatCard
                         label="Perjalanan selesai"
-                        value={formatNumber(summary.trips)}
+                        value={summary.trips}
                         icon={Route}
                     />
                     <StatCard
                         label="Total jarak"
-                        value={`${formatNumber(summary.distance)} km`}
+                        value={summary.distance}
+                        format={formatKm}
                         icon={Gauge}
                     />
                     <StatCard
                         label="Total BBM"
-                        value={`${formatNumber(summary.fuel, 2)} L`}
+                        value={summary.fuel}
+                        format={formatLiters}
                         icon={Fuel}
                     />
                     <StatCard
@@ -69,7 +77,7 @@ export default function VehiclesShow({
                         }
                         icon={Timer}
                     />
-                </div>
+                </StatGrid>
 
                 <div className="grid gap-6 lg:grid-cols-3">
                     <Card className="lg:col-span-2">
@@ -127,7 +135,7 @@ export default function VehiclesShow({
                         <CardTitle>Riwayat pemakaian</CardTitle>
                     </CardHeader>
                     <CardContent className="grid gap-4">
-                        <LoadingRegion className="rounded-lg border">
+                        <LoadingRegion className="overflow-hidden rounded-md border">
                             <Table>
                                 <TableHeader>
                                     <TableRow>

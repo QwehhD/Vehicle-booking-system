@@ -15,6 +15,21 @@ const MONTHS = [
     'Des',
 ];
 
+const MONTHS_LONG = [
+    'Januari',
+    'Februari',
+    'Maret',
+    'April',
+    'Mei',
+    'Juni',
+    'Juli',
+    'Agustus',
+    'September',
+    'Oktober',
+    'November',
+    'Desember',
+];
+
 const partsFormatter = new Intl.DateTimeFormat('en-GB', {
     timeZone: TIME_ZONE,
     year: 'numeric',
@@ -39,6 +54,20 @@ function parts(value: string | Date) {
         day: Number(result.day),
         hour: result.hour,
         minute: result.minute,
+    };
+}
+
+/**
+ * Bagian tanggal WIB untuk tampilan besar, mis. 15 / Oktober / 2026.
+ */
+export function longDateParts(value: string | Date) {
+    const { year, month, day } = parts(value);
+
+    return {
+        day: String(day),
+        month: MONTHS_LONG[month - 1],
+        year,
+        iso: `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
     };
 }
 
@@ -104,6 +133,20 @@ export function formatNumber(value: number | null, fractionDigits = 0): string {
               minimumFractionDigits: fractionDigits,
               maximumFractionDigits: fractionDigits,
           }).format(value);
+}
+
+/**
+ * Jarak dalam kilometer, mis. "1.234 km".
+ */
+export function formatKm(value: number): string {
+    return `${formatNumber(Math.round(value))} km`;
+}
+
+/**
+ * Volume BBM dalam liter dengan dua desimal, mis. "29,40 L".
+ */
+export function formatLiters(value: number): string {
+    return `${formatNumber(value, 2)} L`;
 }
 
 /**
