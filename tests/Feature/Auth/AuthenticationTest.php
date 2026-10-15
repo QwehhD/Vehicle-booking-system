@@ -3,6 +3,7 @@
 use App\Models\ActivityLog;
 use App\Models\User;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('login screen can be rendered', function () {
@@ -97,4 +98,16 @@ test('public registration is not available', function () {
     ])->assertNotFound();
 
     expect(User::count())->toBe(0);
+});
+
+test('login rejects emails longer than the users table allows', function () {
+    $email = str_repeat('a', 64).'@'.implode('.', array_fill(0, 3, str_repeat('b', 60))).'.'.str_repeat('c', 20).'.test';
+
+    expect(strlen($email))->toBeGreaterThan(255)
+        ->and(Validator::make(['email' => $email], ['email' => 'email'])->passes())->toBeTrue();
+
+    $this->post(route('login.store'), ['email' => $email, 'password' => 'password'])
+        ->assertSessionHasErrors('email');
+
+    expect(ActivityLog::count())->toBe(0);
 });
