@@ -198,7 +198,9 @@ class BookingService
                 'completed_at' => now(),
             ]);
 
-            $vehicle->update(['odometer' => $odometerEnd]);
+            // Odometer kendaraan tidak boleh mundur, mis. saat perjalanan lama
+            // baru diselesaikan setelah perjalanan yang lebih baru.
+            $vehicle->update(['odometer' => max($vehicle->odometer, $odometerEnd)]);
 
             $distance = $odometerEnd - $odometerStart;
 
