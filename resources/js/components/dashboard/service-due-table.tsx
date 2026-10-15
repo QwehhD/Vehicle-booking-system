@@ -27,22 +27,22 @@ export function ServiceDueTable({
     return (
         <Card className="gap-4">
             <CardHeader>
-                <CardTitle>Perlu service segera</CardTitle>
+                <CardTitle>Jadwal Servis Terdekat</CardTitle>
                 <CardDescription>
-                    Kendaraan dengan jadwal service paling lambat 14 hari lagi.
+                    Kendaraan dengan jadwal servis paling lambat 14 hari lagi.
                 </CardDescription>
             </CardHeader>
             <CardContent>
                 {vehicles.length === 0 ? (
                     <p className="py-6 text-center text-sm text-muted-foreground">
-                        Tidak ada kendaraan yang perlu service dalam 14 hari.
+                        Tidak ada kendaraan yang perlu diservis dalam 14 hari.
                     </p>
                 ) : (
                     <Table>
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Kendaraan</TableHead>
-                                <TableHead>Jadwal service</TableHead>
+                                <TableHead>Jadwal Servis</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead>Lokasi</TableHead>
                             </TableRow>

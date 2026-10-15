@@ -90,7 +90,7 @@ function Hero({
             <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
                 <div className="grid gap-5">
                     <p className="eyebrow reveal">
-                        Selamat datang, {auth.user.name}
+                        Selamat datang kembali, {auth.user.name}
                     </p>
                     <h1 className="reveal max-w-3xl font-display text-4xl leading-[1.04] font-light tracking-tight [--stagger:1] sm:text-5xl xl:text-6xl">
                         <span className="text-gradient">{headline}</span>
@@ -128,20 +128,20 @@ function AdminDashboard({
         <>
             <Hero
                 {...filterProps}
-                headline="Seluruh armada, satu layar."
-                summary={`Ringkasan pemesanan, persetujuan, dan pemakaian kendaraan tahun ${year}.`}
+                headline="Ringkasan Operasional Armada"
+                summary={`Pemantauan pemesanan, persetujuan, dan pemakaian kendaraan sepanjang tahun ${year}.`}
             >
                 <StatGrid className="grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
                     <StatCard
                         index={1}
-                        label="Total pemesanan"
+                        label="Total Pemesanan"
                         value={stats.total}
                         hint={`Tahun ${year}`}
                         icon={CalendarCheck}
                     />
                     <StatCard
                         index={2}
-                        label="Menunggu persetujuan"
+                        label="Menunggu Persetujuan"
                         value={stats.pending}
                         icon={Hourglass}
                     />
@@ -149,26 +149,26 @@ function AdminDashboard({
                         index={3}
                         label="Disetujui"
                         value={stats.approved}
-                        hint="Belum selesai"
+                        hint="Belum diselesaikan"
                         icon={ClipboardCheck}
                     />
                     <StatCard
                         index={4}
-                        label="Selesai bulan ini"
+                        label="Selesai Bulan Ini"
                         value={stats.completed_this_month}
                         icon={CircleCheck}
                     />
                     <StatCard
                         index={5}
-                        label="Kendaraan tersedia"
+                        label="Kendaraan Tersedia"
                         value={`${formatNumber(stats.vehicles_available)}/${formatNumber(stats.vehicles_total)}`}
                         icon={Truck}
                     />
                     <StatCard
                         index={6}
-                        label="Service ≤ 14 hari"
+                        label="Jatuh Tempo Servis"
                         value={stats.vehicles_service_due}
-                        hint="Kendaraan"
+                        hint="Dalam 14 hari"
                         icon={Wrench}
                     />
                 </StatGrid>
@@ -211,26 +211,26 @@ function ApproverDashboard({
         <>
             <Hero
                 {...filterProps}
-                headline="Persetujuan Anda, tanpa antre."
-                summary={`Pemesanan yang menunggu giliran Anda dan riwayat keputusan tahun ${year}.`}
+                headline="Ringkasan Persetujuan"
+                summary={`Antrean keputusan Anda dan rekap persetujuan sepanjang tahun ${year}.`}
             >
                 <StatGrid className="sm:grid-cols-3">
                     <StatCard
                         index={1}
-                        label="Menunggu giliran saya"
+                        label="Menunggu Keputusan"
                         value={stats.waiting}
                         icon={CalendarClock}
                     />
                     <StatCard
                         index={2}
-                        label="Sudah saya setujui"
+                        label="Telah Disetujui"
                         value={stats.approved}
                         hint={`Tahun ${year}`}
                         icon={ThumbsUp}
                     />
                     <StatCard
                         index={3}
-                        label="Sudah saya tolak"
+                        label="Telah Ditolak"
                         value={stats.rejected}
                         hint={`Tahun ${year}`}
                         icon={ThumbsDown}

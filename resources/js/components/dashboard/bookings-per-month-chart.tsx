@@ -50,8 +50,8 @@ export function BookingsPerMonthChart({
 }) {
     return (
         <ChartCard
-            title="Pemesanan per bulan"
-            description={`Jumlah pemesanan menurut bulan mulai dan status, ${year}.`}
+            title="Tren Pemesanan Bulanan"
+            description={`Jumlah pemesanan per bulan berdasarkan jadwal mulai dan status, ${year}.`}
             className={className}
             index={index}
             chart={

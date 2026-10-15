@@ -62,8 +62,8 @@ export function TopVehiclesChart({
 }) {
     return (
         <ChartCard
-            title="Kendaraan paling sering dipakai"
-            description="10 teratas dari pemesanan disetujui dan selesai."
+            title="Kendaraan dengan Pemakaian Tertinggi"
+            description="Sepuluh kendaraan teratas dari pemesanan yang disetujui dan selesai."
             className={className}
             index={index}
             chart={

@@ -134,8 +134,8 @@ export function UsageCompositionChart({
 }) {
     return (
         <ChartCard
-            title="Komposisi pemakaian"
-            description="Pemesanan disetujui dan selesai."
+            title="Komposisi Pemakaian Armada"
+            description="Berdasarkan pemesanan yang disetujui dan selesai."
             className={className}
             index={index}
             chart={
@@ -146,7 +146,7 @@ export function UsageCompositionChart({
                 ) : (
                     <div className="@container">
                         <div className="grid gap-6 @sm:grid-cols-2">
-                            <Donut title="Jenis kendaraan" slices={type} />
+                            <Donut title="Jenis Kendaraan" slices={type} />
                             <Donut title="Kepemilikan" slices={ownership} />
                         </div>
                     </div>

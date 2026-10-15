@@ -85,8 +85,8 @@ export function DistanceFuelChart({
 }) {
     return (
         <ChartCard
-            title="Jarak tempuh & konsumsi BBM"
-            description="Per bulan dari pemesanan yang sudah selesai."
+            title="Jarak Tempuh & Konsumsi BBM"
+            description="Rekap bulanan dari pemesanan yang telah diselesaikan."
             className={className}
             index={index}
             chart={
@@ -94,7 +94,7 @@ export function DistanceFuelChart({
                     <Panel
                         data={data}
                         dataKey="distance"
-                        title="Jarak tempuh (km)"
+                        title="Jarak Tempuh (km)"
                     />
                     <Panel
                         data={data}

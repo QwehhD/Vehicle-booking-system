@@ -20,9 +20,9 @@ export function WaitingApprovalsList({
     return (
         <Card className="gap-4">
             <CardHeader>
-                <CardTitle>Menunggu giliran Anda</CardTitle>
+                <CardTitle>Antrean Persetujuan Anda</CardTitle>
                 <CardDescription>
-                    5 pemesanan terbaru yang perlu Anda setujui atau tolak.{' '}
+                    Lima pemesanan terbaru yang menunggu keputusan Anda.{' '}
                     <Link
                         href={index()}
                         className="underline underline-offset-4"
