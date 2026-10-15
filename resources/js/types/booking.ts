@@ -185,3 +185,30 @@ export type ApprovalIndexProps = {
     counts: Record<ApprovalTab, number>;
     approvals: Paginated<BookingApproval>;
 };
+
+export type ReportFilters = {
+    date_from: string;
+    date_to: string;
+    status: BookingStatus | null;
+    vehicle_type: VehicleType | null;
+    region_id: number | null;
+};
+
+export type ReportSummary = {
+    total: number;
+    approved_or_completed: number;
+    rejected: number;
+    cancelled: number;
+    by_status: Record<BookingStatus, number>;
+    distance: number;
+    fuel: number;
+};
+
+export type ReportIndexProps = {
+    filters: ReportFilters;
+    summary: ReportSummary;
+    bookings: Paginated<Booking>;
+    statuses: Option[];
+    vehicleTypes: Option[];
+    regions: { id: number; name: string }[];
+};
