@@ -202,15 +202,15 @@ class Booking extends Model
     {
         $query
             ->when($filters['search'] ?? null, fn (Builder $query, string $search) => $query->search($search))
-            ->when($filters['status'] ?? null, fn (Builder $query, string $status) => $query->where('status', $status))
+            ->when($filters['status'] ?? null, fn (Builder $query, string $status) => $query->where('bookings.status', $status))
             ->when($filters['vehicle_type'] ?? null, fn (Builder $query, string $type) => $query
                 ->whereHas('vehicle', fn (Builder $vehicle) => $vehicle->where('type', $type)))
             ->when($filters['region_id'] ?? null, fn (Builder $query, int|string $regionId) => $query
                 ->whereHas('vehicle.location', fn (Builder $location) => $location->where('region_id', $regionId)))
             ->when($filters['date_from'] ?? null, fn (Builder $query, string $from) => $query
-                ->where('start_at', '>=', CarbonImmutable::parse($from)->startOfDay()))
+                ->where('bookings.start_at', '>=', CarbonImmutable::parse($from)->startOfDay()))
             ->when($filters['date_to'] ?? null, fn (Builder $query, string $to) => $query
-                ->where('start_at', '<', CarbonImmutable::parse($to)->addDay()->startOfDay()));
+                ->where('bookings.start_at', '<', CarbonImmutable::parse($to)->addDay()->startOfDay()));
     }
 
     /**
@@ -224,8 +224,8 @@ class Booking extends Model
         $like = "%{$term}%";
 
         $query->where(fn (Builder $query) => $query
-            ->where('code', 'like', $like)
-            ->orWhere('requester_name', 'like', $like)
+            ->where('bookings.code', 'like', $like)
+            ->orWhere('bookings.requester_name', 'like', $like)
             ->orWhereHas('vehicle', fn (Builder $vehicle) => $vehicle->where('plate_number', 'like', $like)));
     }
 
