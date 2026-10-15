@@ -1,20 +1,12 @@
 import { router } from '@inertiajs/react';
 import { Search, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { FilterSelect } from '@/components/filter-select';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import { index } from '@/routes/bookings';
 import type { BookingFilters as Filters, Option } from '@/types';
-
-const ALL = 'all';
 
 type Props = {
     filters: Filters;
@@ -64,8 +56,8 @@ export function BookingFilters({
     );
 
     return (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
-            <div className="grid gap-1.5 sm:col-span-2">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-7">
+            <div className="col-span-2 grid gap-1.5">
                 <Label htmlFor="search">Cari</Label>
                 <div className="relative">
                     <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -101,6 +93,7 @@ export function BookingFilters({
 
             <FilterSelect
                 id="region_id"
+                className="col-span-2 lg:col-span-1"
                 label="Region"
                 value={filters.region_id?.toString() ?? null}
                 options={regions.map((region) => ({
@@ -139,7 +132,7 @@ export function BookingFilters({
             </div>
 
             {hasFilters && (
-                <div className="flex items-end sm:col-span-2 lg:col-span-6">
+                <div className="col-span-2 flex items-end lg:col-span-7">
                     <Button
                         type="button"
                         variant="ghost"
@@ -155,44 +148,6 @@ export function BookingFilters({
                     </Button>
                 </div>
             )}
-        </div>
-    );
-}
-
-function FilterSelect({
-    id,
-    label,
-    value,
-    options,
-    onChange,
-}: {
-    id: string;
-    label: string;
-    value: string | null;
-    options: Option[];
-    onChange: (value: string | null) => void;
-}) {
-    return (
-        <div className="grid gap-1.5">
-            <Label htmlFor={id}>{label}</Label>
-            <Select
-                value={value ?? ALL}
-                onValueChange={(selected) =>
-                    onChange(selected === ALL ? null : selected)
-                }
-            >
-                <SelectTrigger id={id} className="w-full">
-                    <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value={ALL}>Semua</SelectItem>
-                    {options.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
         </div>
     );
 }

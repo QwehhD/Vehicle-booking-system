@@ -1,18 +1,10 @@
 import { router } from '@inertiajs/react';
+import { FilterSelect } from '@/components/filter-select';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import { index } from '@/routes/reports';
 import type { Option, ReportFilters as Filters } from '@/types';
-
-const ALL = 'all';
 
 type Range = { date_from: string; date_to: string };
 
@@ -117,7 +109,7 @@ export function ReportFilters({
                 })}
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+            <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
                 <div className="grid gap-1.5">
                     <Label htmlFor="date_from">Dari tanggal</Label>
                     <Input
@@ -166,6 +158,7 @@ export function ReportFilters({
                 />
                 <FilterSelect
                     id="region_id"
+                    className="col-span-2 lg:col-span-1"
                     label="Region"
                     value={filters.region_id?.toString() ?? null}
                     options={regions.map((region) => ({
@@ -177,44 +170,6 @@ export function ReportFilters({
                     }
                 />
             </div>
-        </div>
-    );
-}
-
-function FilterSelect({
-    id,
-    label,
-    value,
-    options,
-    onChange,
-}: {
-    id: string;
-    label: string;
-    value: string | null;
-    options: Option[];
-    onChange: (value: string | null) => void;
-}) {
-    return (
-        <div className="grid gap-1.5">
-            <Label htmlFor={id}>{label}</Label>
-            <Select
-                value={value ?? ALL}
-                onValueChange={(selected) =>
-                    onChange(selected === ALL ? null : selected)
-                }
-            >
-                <SelectTrigger id={id} className="w-full">
-                    <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value={ALL}>Semua</SelectItem>
-                    {options.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
         </div>
     );
 }
