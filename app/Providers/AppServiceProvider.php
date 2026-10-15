@@ -23,6 +23,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Inertia\ExceptionResponse;
+use Inertia\Inertia;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -42,6 +44,7 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
         $this->configureModels();
         $this->configureActivityLogging();
+        $this->configureErrorPages();
     }
 
     /**
@@ -87,6 +90,39 @@ class AppServiceProvider extends ServiceProvider
         Model::preventLazyLoading(! app()->isProduction());
 
         JsonResource::withoutWrapping();
+    }
+
+    /**
+     * Render HTTP errors as Inertia pages in Indonesian. Server errors keep
+     * Laravel's debug page while debug mode is on.
+     */
+    protected function configureErrorPages(): void
+    {
+        Inertia::handleExceptionsUsing(function (ExceptionResponse $response) {
+            $status = $response->statusCode();
+
+            if ($status === 419) {
+                return back()->with('error', 'Sesi Anda sudah berakhir. Silakan coba lagi.');
+            }
+
+            $renders = in_array($status, [403, 404], true)
+                || (in_array($status, [500, 503], true) && ! config('app.debug'));
+
+            if (! $renders) {
+                return null;
+            }
+
+            $message = $response->exception->getMessage();
+
+            return $response
+                ->render('error', [
+                    'status' => $status,
+                    'message' => $status === 403 && ! in_array($message, ['', 'This action is unauthorized.'], true)
+                        ? $message
+                        : null,
+                ])
+                ->withSharedData();
+        });
     }
 
     /**
