@@ -105,3 +105,14 @@ export function formatNumber(value: number | null, fractionDigits = 0): string {
               maximumFractionDigits: fractionDigits,
           }).format(value);
 }
+
+/**
+ * Sisa hari menuju suatu jadwal, mis. "4 hari lagi" atau "Terlambat 2 hari".
+ */
+export function formatDaysUntil(days: number): string {
+    if (days < 0) {
+        return `Terlambat ${Math.abs(days)} hari`;
+    }
+
+    return days === 0 ? 'Hari ini' : `${days} hari lagi`;
+}

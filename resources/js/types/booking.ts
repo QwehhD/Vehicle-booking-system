@@ -44,6 +44,8 @@ export type Vehicle = {
     status_color: BadgeColor;
     last_service_at: string | null;
     next_service_at: string | null;
+    days_until_service: number | null;
+    completed_bookings_count?: number;
     location?: {
         id: number;
         name: string;
@@ -104,12 +106,15 @@ export type Booking = {
 export type ActivityLog = {
     id: number;
     action: string;
+    action_label: string;
+    action_color: BadgeColor;
     description: string;
     properties: Record<string, unknown> | null;
     ip_address: string | null;
     user_agent: string | null;
     created_at: string;
     user?: { id: number; name: string } | null;
+    booking?: { id: number; code: string } | null;
 };
 
 export type PaginationLink = {
@@ -211,4 +216,46 @@ export type ReportIndexProps = {
     statuses: Option[];
     vehicleTypes: Option[];
     regions: { id: number; name: string }[];
+};
+
+export type ActivityLogFilters = {
+    search: string | null;
+    user_id: number | null;
+    action: string | null;
+    date_from: string | null;
+    date_to: string | null;
+};
+
+export type ActivityLogIndexProps = {
+    logs: Paginated<ActivityLog>;
+    filters: ActivityLogFilters;
+    users: { id: number; name: string }[];
+    actions: Option[];
+};
+
+export type VehicleFilters = {
+    type: VehicleType | null;
+    ownership: 'owned' | 'rented' | null;
+    location_id: number | null;
+    status: 'available' | 'maintenance' | null;
+};
+
+export type VehicleIndexProps = {
+    vehicles: Paginated<Vehicle>;
+    filters: VehicleFilters;
+    types: Option[];
+    ownerships: Option[];
+    statuses: Option[];
+    locations: { id: number; name: string }[];
+};
+
+export type VehicleShowProps = {
+    vehicle: Vehicle;
+    summary: {
+        trips: number;
+        distance: number;
+        fuel: number;
+        km_per_liter: number | null;
+    };
+    bookings: Paginated<Booking>;
 };
