@@ -45,6 +45,7 @@
 
     --color-brand: var(--brand);
     --color-brand-foreground: var(--brand-foreground);
+    --color-brand-soft: var(--brand-soft);
 
     --color-destructive: var(--destructive);
     --color-destructive-foreground: var(--destructive-foreground);
@@ -70,94 +71,96 @@
 }
 
 /*
- * Tema editorial: kanvas charcoal bertekstur grain, garis 1px, sudut tegas,
- * dan aksen gradasi sage → peach → rose. Mode gelap adalah tampilan bawaan;
- * mode terang memakai bahasa yang sama di atas kertas hangat dengan gradasi
- * yang lebih pekat agar tetap kontras.
+ * Tema netral: kertas hangat (terang) dan grafit (gelap) dengan satu aksen
+ * pasir. Gradasi hanya dipakai tipis, dan warna dekoratif ilustrasi memakai
+ * nada tanah yang diredam (sage, pasir, tanah liat). Mode gelap adalah
+ * bawaan; pengguna bisa memilih terang, gelap, atau mengikuti sistem.
  */
 :root {
-    --background: #f1f0ec;
-    --foreground: #1f1f22;
-    --card: #fbfaf8;
-    --card-foreground: #1f1f22;
-    --popover: #fdfcfb;
-    --popover-foreground: #1f1f22;
-    --primary: #1f1f22;
+    --background: #f6f5f2;
+    --foreground: #1c1b19;
+    --card: #ffffff;
+    --card-foreground: #1c1b19;
+    --popover: #ffffff;
+    --popover-foreground: #1c1b19;
+    --primary: #1c1b19;
     --primary-foreground: #f6f5f2;
-    --secondary: #e7e5e0;
-    --secondary-foreground: #1f1f22;
-    --muted: #e9e7e2;
-    --muted-foreground: #66656b;
-    --accent: #e9e7e2;
-    --accent-foreground: #1f1f22;
-    --brand: #3f8f5a;
+    --secondary: #eeece7;
+    --secondary-foreground: #1c1b19;
+    --muted: #efede8;
+    --muted-foreground: #6f6c65;
+    --accent: #efede8;
+    --accent-foreground: #1c1b19;
+    --brand: #8a7552;
     --brand-foreground: #ffffff;
-    --grad-1: #3f8f5a;
-    --grad-2: #c9734a;
-    --grad-3: #c2547c;
+    --brand-soft: rgb(138 117 82 / 0.12);
+    --grad-1: #6f8a78;
+    --grad-2: #a48b62;
+    --grad-3: #a37b6e;
     --destructive: oklch(0.577 0.245 27.325);
     --destructive-foreground: oklch(0.577 0.245 27.325);
-    --border: #dcdad4;
-    --input: #cfccc5;
-    --ring: #3f8f5a;
+    --border: #e3e0d9;
+    --input: #d8d4cc;
+    --ring: #8a7552;
     --chart-1: oklch(0.646 0.222 41.116);
     --chart-2: oklch(0.6 0.118 184.704);
     --chart-3: oklch(0.398 0.07 227.392);
     --chart-4: oklch(0.828 0.189 84.429);
     --chart-5: oklch(0.769 0.188 70.08);
-    --radius: 0.375rem;
-    --sidebar: #1f1f22;
-    --sidebar-foreground: #d6d5d1;
-    --sidebar-primary: #ececea;
-    --sidebar-primary-foreground: #1f1f22;
-    --sidebar-accent: #2c2c2f;
-    --sidebar-accent-foreground: #f5f5f3;
-    --sidebar-border: rgb(255 255 255 / 0.08);
-    --sidebar-ring: #a8d5a2;
-    --glow: rgb(201 115 74 / 0.07);
-    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    --radius: 0.5rem;
+    --sidebar: #eceae4;
+    --sidebar-foreground: #3a3833;
+    --sidebar-primary: #1c1b19;
+    --sidebar-primary-foreground: #f6f5f2;
+    --sidebar-accent: #e1ded6;
+    --sidebar-accent-foreground: #1c1b19;
+    --sidebar-border: #dcd8cf;
+    --sidebar-ring: #8a7552;
+    --glow: rgb(138 117 82 / 0.06);
+    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.035 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 .dark {
-    --background: #262628;
-    --foreground: #ececea;
-    --card: #2e2e31;
-    --card-foreground: #ececea;
-    --popover: #313134;
-    --popover-foreground: #ececea;
-    --primary: #ececea;
-    --primary-foreground: #1f1f22;
-    --secondary: #38383b;
-    --secondary-foreground: #ececea;
-    --muted: #333336;
-    --muted-foreground: #a3a2a8;
-    --accent: #38383b;
-    --accent-foreground: #ececea;
-    --brand: #a8d5a2;
-    --brand-foreground: #1f1f22;
-    --grad-1: #a8d5a2;
-    --grad-2: #f2c29b;
-    --grad-3: #ee9fbd;
+    --background: #1d1d1f;
+    --foreground: #efede8;
+    --card: #252527;
+    --card-foreground: #efede8;
+    --popover: #2a2a2c;
+    --popover-foreground: #efede8;
+    --primary: #efede8;
+    --primary-foreground: #1c1b19;
+    --secondary: #2f2f31;
+    --secondary-foreground: #efede8;
+    --muted: #2c2c2e;
+    --muted-foreground: #a09d96;
+    --accent: #303032;
+    --accent-foreground: #efede8;
+    --brand: #cdbb98;
+    --brand-foreground: #1c1b19;
+    --brand-soft: rgb(205 187 152 / 0.12);
+    --grad-1: #a9b8ad;
+    --grad-2: #d6c6a5;
+    --grad-3: #c4a99f;
     --destructive: oklch(0.396 0.141 25.723);
     --destructive-foreground: oklch(0.637 0.237 25.331);
-    --border: rgb(255 255 255 / 0.1);
-    --input: rgb(255 255 255 / 0.16);
-    --ring: #a8d5a2;
+    --border: rgb(255 255 255 / 0.08);
+    --input: rgb(255 255 255 / 0.14);
+    --ring: #cdbb98;
     --chart-1: oklch(0.488 0.243 264.376);
     --chart-2: oklch(0.696 0.17 162.48);
     --chart-3: oklch(0.769 0.188 70.08);
     --chart-4: oklch(0.627 0.265 303.9);
     --chart-5: oklch(0.645 0.246 16.439);
-    --sidebar: #1e1e20;
-    --sidebar-foreground: #d6d5d1;
-    --sidebar-primary: #ececea;
-    --sidebar-primary-foreground: #1f1f22;
-    --sidebar-accent: #2c2c2f;
-    --sidebar-accent-foreground: #f5f5f3;
-    --sidebar-border: rgb(255 255 255 / 0.07);
-    --sidebar-ring: #a8d5a2;
-    --glow: rgb(242 194 155 / 0.06);
-    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    --sidebar: #161617;
+    --sidebar-foreground: #d4d1ca;
+    --sidebar-primary: #efede8;
+    --sidebar-primary-foreground: #1c1b19;
+    --sidebar-accent: #242426;
+    --sidebar-accent-foreground: #f5f4f0;
+    --sidebar-border: rgb(255 255 255 / 0.06);
+    --sidebar-ring: #cdbb98;
+    --glow: rgb(205 187 152 / 0.05);
+    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.03 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 @layer base {
@@ -178,15 +181,13 @@
 }
 
 @layer components {
-    /* Kanvas panel konten: grain dan cahaya peach samar di sudut kanan atas. */
+    /* Kanvas panel konten: cahaya pasir samar di sudut kanan atas. */
     .app-canvas {
-        background-image:
-            radial-gradient(
-                56rem 28rem at 100% -10%,
-                var(--glow),
-                transparent 60%
-            ),
-            var(--grain);
+        background-image: radial-gradient(
+            56rem 28rem at 100% -10%,
+            var(--glow),
+            transparent 60%
+        );
     }
 
     /* Label kecil berhuruf kapital, seperti navigasi pada desain referensi. */
@@ -199,30 +200,30 @@
         color: var(--muted-foreground);
     }
 
-    /* Teks bergradasi yang bergeser pelan. */
+    /* Teks dengan gradasi nada (tinta ke pasir) yang bergeser pelan. */
     .text-gradient {
         background-image: linear-gradient(
             100deg,
-            var(--grad-1),
-            var(--grad-2) 50%,
-            var(--grad-3),
-            var(--grad-1)
+            var(--foreground) 0%,
+            var(--foreground) 30%,
+            var(--brand) 70%,
+            var(--foreground) 100%
         );
-        background-size: 300% 100%;
+        background-size: 250% 100%;
         background-clip: text;
         color: transparent;
-        animation: gradient-drift 14s ease-in-out infinite alternate;
+        animation: gradient-drift 16s ease-in-out infinite alternate;
     }
 
-    /* Garis tipis bergradasi yang tergambar dari kiri ke kanan. */
+    /* Garis tipis yang tergambar dari kiri ke kanan, berpusat pada aksen. */
     .gradient-rule {
         height: 1px;
         background: linear-gradient(
             90deg,
             transparent,
-            var(--grad-1) 20%,
-            var(--grad-2) 50%,
-            var(--grad-3) 80%,
+            var(--border) 15%,
+            var(--brand) 50%,
+            var(--border) 85%,
             transparent
         );
         transform-origin: left center;
@@ -255,13 +256,6 @@
         transform-origin: center;
         animation: orbit-float 7s ease-in-out infinite;
         animation-delay: var(--delay, 0s);
-    }
-
-    /* Sidebar selalu gelap, jadi gradasinya memakai warna mode gelap. */
-    [data-sidebar='sidebar'] {
-        --grad-1: #a8d5a2;
-        --grad-2: #f2c29b;
-        --grad-3: #ee9fbd;
     }
 
     /* Area konten halaman yang dianimasikan View Transitions. */
@@ -354,6 +348,29 @@
 
 ::view-transition-new(page) {
     animation: vt-in 0.5s var(--ease-out-expo) 0.06s both;
+}
+
+/* Pergantian tema: seluruh layar disilangkan pelan. */
+.theme-switching::view-transition-old(root),
+.theme-switching::view-transition-old(page) {
+    animation: theme-fade-out 0.4s ease both;
+}
+
+.theme-switching::view-transition-new(root),
+.theme-switching::view-transition-new(page) {
+    animation: theme-fade-in 0.4s ease both;
+}
+
+@keyframes theme-fade-out {
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes theme-fade-in {
+    from {
+        opacity: 0;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {

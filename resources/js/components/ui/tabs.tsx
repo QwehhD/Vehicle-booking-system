@@ -62,8 +62,8 @@ function TabsTrigger({
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        "relative inline-flex h-full shrink-0 items-center justify-center gap-1.5 px-0 text-xs font-medium tracking-[0.14em] whitespace-nowrap text-muted-foreground uppercase transition-colors duration-200 outline-none hover:text-foreground focus-visible:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/40 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-foreground group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        "after:absolute after:inset-x-0 after:bottom-0 after:h-px after:origin-left after:scale-x-0 after:bg-gradient-to-r after:from-[var(--grad-1)] after:via-[var(--grad-2)] after:to-[var(--grad-3)] after:transition-transform after:duration-500 after:ease-[var(--ease-out-expo)] data-[state=active]:after:scale-x-100",
+        "relative inline-flex h-full shrink-0 items-center justify-center gap-1.5 px-0 text-xs font-medium tracking-[0.1em] whitespace-nowrap text-muted-foreground uppercase transition-colors duration-200 outline-none hover:text-foreground focus-visible:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/40 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-foreground group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "after:absolute after:inset-x-0 after:bottom-0 after:h-px after:origin-left after:scale-x-0 after:bg-brand after:transition-transform after:duration-500 after:ease-[var(--ease-out-expo)] data-[state=active]:after:scale-x-100",
         className
       )}
       {...props}
