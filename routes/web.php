@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\VehicleController;
 use App\Models\Booking;
 use Illuminate\Support\Facades\Route;
 
@@ -31,8 +33,9 @@ Route::middleware('auth')->group(function () {
 
         Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
         Route::get('reports/export', [ReportController::class, 'export'])->name('reports.export');
-        Route::inertia('activity-logs', 'activity-logs/index')->name('activity-logs.index');
-        Route::inertia('vehicles', 'vehicles/index')->name('vehicles.index');
+        Route::get('activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
+        Route::get('vehicles', [VehicleController::class, 'index'])->name('vehicles.index');
+        Route::get('vehicles/{vehicle}', [VehicleController::class, 'show'])->name('vehicles.show');
     });
 
     Route::get('bookings/{booking}', [BookingController::class, 'show'])
