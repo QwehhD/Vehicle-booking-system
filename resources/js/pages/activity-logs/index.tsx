@@ -29,11 +29,11 @@ export default function ActivityLogsIndex({
 
     return (
         <>
-            <Head title="Log Aktivitas" />
+            <Head title="Log Aktivitas Sistem" />
             <div className="flex h-full flex-1 flex-col gap-6 p-4">
                 <Heading
-                    title="Log Aktivitas"
-                    description="Riwayat aktivitas pengguna di aplikasi. Klik baris untuk melihat detail."
+                    title="Log Aktivitas Sistem"
+                    description="Jejak audit seluruh aktivitas pengguna. Pilih baris untuk melihat detailnya."
                 />
 
                 <ActivityLogFilters

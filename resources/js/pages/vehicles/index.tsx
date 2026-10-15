@@ -30,11 +30,11 @@ export default function VehiclesIndex({
 
     return (
         <>
-            <Head title="Kendaraan" />
+            <Head title="Data Armada" />
             <div className="flex h-full flex-1 flex-col gap-6 p-4">
                 <Heading
-                    title="Kendaraan"
-                    description="Daftar kendaraan, jadwal service, dan riwayat pemakaian."
+                    title="Data Armada"
+                    description="Daftar kendaraan beserta jadwal servis dan riwayat pemakaiannya."
                 />
 
                 <VehicleFilters
@@ -56,7 +56,7 @@ export default function VehiclesIndex({
                                 <TableHead className="text-right">
                                     Odometer
                                 </TableHead>
-                                <TableHead>Service berikutnya</TableHead>
+                                <TableHead>Servis Berikutnya</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead className="text-right">
                                     Pemakaian

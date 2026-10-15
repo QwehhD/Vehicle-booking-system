@@ -5,20 +5,20 @@ import { dashboard, login } from '@/routes';
 
 const COPY: Record<number, { title: string; description: string }> = {
     403: {
-        title: 'Akses ditolak',
+        title: 'Akses Ditolak',
         description: 'Anda tidak memiliki izin untuk membuka halaman ini.',
     },
     404: {
-        title: 'Halaman tidak ditemukan',
+        title: 'Halaman Tidak Ditemukan',
         description: 'Halaman yang Anda cari tidak ada atau sudah dipindahkan.',
     },
     500: {
-        title: 'Terjadi kesalahan',
+        title: 'Terjadi Kesalahan Sistem',
         description:
             'Ada masalah di server kami. Silakan coba beberapa saat lagi.',
     },
     503: {
-        title: 'Sedang dalam pemeliharaan',
+        title: 'Sistem Sedang Dalam Pemeliharaan',
         description:
             'Aplikasi sedang diperbarui. Silakan kembali sebentar lagi.',
     },

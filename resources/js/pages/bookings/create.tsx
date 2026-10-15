@@ -69,14 +69,14 @@ export default function BookingsCreate({
 
     return (
         <>
-            <Head title="Buat Pemesanan" />
+            <Head title="Formulir Pemesanan" />
             <form
                 onSubmit={submit}
                 className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-4"
             >
                 <Heading
-                    title="Buat Pemesanan"
-                    description="Isi data perjalanan, pilih kendaraan dan driver, lalu tentukan approver berjenjang."
+                    title="Formulir Pemesanan Kendaraan"
+                    description="Lengkapi data pemohon dan perjalanan, pilih kendaraan serta driver, lalu tetapkan urutan approver."
                 />
 
                 <Section

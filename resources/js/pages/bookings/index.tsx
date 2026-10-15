@@ -31,12 +31,12 @@ export default function BookingsIndex({
 
     return (
         <>
-            <Head title="Pemesanan" />
+            <Head title="Manajemen Pemesanan" />
             <div className="flex h-full flex-1 flex-col gap-6 p-4">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <Heading
-                        title="Pemesanan"
-                        description="Daftar pemesanan kendaraan beserta progres persetujuannya."
+                        title="Manajemen Pemesanan"
+                        description="Daftar pemesanan kendaraan beserta status dan progres persetujuannya."
                     />
                     <Button asChild>
                         <Link href={create()}>

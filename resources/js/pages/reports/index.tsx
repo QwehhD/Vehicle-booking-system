@@ -51,12 +51,12 @@ export default function ReportsIndex({
 
     return (
         <>
-            <Head title="Laporan" />
+            <Head title="Laporan Periodik" />
             <div className="flex h-full flex-1 flex-col gap-6 p-4">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <Heading
-                        title="Laporan"
-                        description="Laporan periodik pemesanan kendaraan berdasarkan jadwal mulai."
+                        title="Laporan Periodik"
+                        description="Rekap pemesanan kendaraan berdasarkan jadwal mulai, siap diekspor ke Excel."
                     />
                     <Button asChild>
                         <a
@@ -80,13 +80,13 @@ export default function ReportsIndex({
                 <LoadingRegion className="grid grid-cols-1 gap-6">
                     <StatGrid className="reveal grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
                         <StatCard
-                            label="Jumlah pemesanan"
+                            label="Jumlah Pemesanan"
                             value={summary.total}
                             hint={period}
                             icon={CalendarCheck}
                         />
                         <StatCard
-                            label="Disetujui + selesai"
+                            label="Disetujui & Selesai"
                             value={summary.approved_or_completed}
                             icon={CircleCheck}
                         />
@@ -101,13 +101,13 @@ export default function ReportsIndex({
                             icon={Ban}
                         />
                         <StatCard
-                            label="Total km"
+                            label="Total Jarak Tempuh"
                             value={summary.distance}
                             hint="Pemesanan selesai"
                             icon={Gauge}
                         />
                         <StatCard
-                            label="Total BBM"
+                            label="Total Konsumsi BBM"
                             value={summary.fuel}
                             format={formatLiters}
                             hint="Pemesanan selesai"

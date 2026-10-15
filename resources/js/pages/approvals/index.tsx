@@ -22,11 +22,11 @@ export default function ApprovalsIndex({
 }: ApprovalIndexProps) {
     return (
         <>
-            <Head title="Persetujuan" />
+            <Head title="Persetujuan Pemesanan" />
             <div className="flex h-full flex-1 flex-col gap-6 p-4">
                 <Heading
-                    title="Persetujuan"
-                    description="Pemesanan yang menunggu atau pernah melewati persetujuan Anda."
+                    title="Persetujuan Pemesanan"
+                    description="Pemesanan yang menunggu keputusan Anda beserta riwayat persetujuan sebelumnya."
                 />
 
                 <Tabs

@@ -52,24 +52,24 @@ export default function VehiclesShow({
 
                 <StatGrid className="reveal grid-cols-2 lg:grid-cols-4">
                     <StatCard
-                        label="Perjalanan selesai"
+                        label="Perjalanan Selesai"
                         value={summary.trips}
                         icon={Route}
                     />
                     <StatCard
-                        label="Total jarak"
+                        label="Total Jarak Tempuh"
                         value={summary.distance}
                         format={formatKm}
                         icon={Gauge}
                     />
                     <StatCard
-                        label="Total BBM"
+                        label="Total Konsumsi BBM"
                         value={summary.fuel}
                         format={formatLiters}
                         icon={Fuel}
                     />
                     <StatCard
-                        label="Rata-rata konsumsi"
+                        label="Rata-rata Konsumsi"
                         value={
                             summary.km_per_liter === null
                                 ? '–'
@@ -82,7 +82,7 @@ export default function VehiclesShow({
                 <div className="grid gap-6 lg:grid-cols-3">
                     <Card className="lg:col-span-2">
                         <CardHeader>
-                            <CardTitle>Informasi kendaraan</CardTitle>
+                            <CardTitle>Informasi Kendaraan</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <dl className="grid gap-4 sm:grid-cols-2">
@@ -112,14 +112,14 @@ export default function VehiclesShow({
 
                     <Card>
                         <CardHeader>
-                            <CardTitle>Jadwal service</CardTitle>
+                            <CardTitle>Jadwal Servis</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <dl className="grid gap-4">
-                                <Detail label="Service terakhir">
+                                <Detail label="Servis terakhir">
                                     {formatDate(vehicle.last_service_at)}
                                 </Detail>
-                                <Detail label="Service berikutnya">
+                                <Detail label="Servis berikutnya">
                                     <ServiceDue
                                         date={vehicle.next_service_at}
                                         daysLeft={vehicle.days_until_service}
@@ -132,7 +132,7 @@ export default function VehiclesShow({
 
                 <Card className="gap-4">
                     <CardHeader>
-                        <CardTitle>Riwayat pemakaian</CardTitle>
+                        <CardTitle>Riwayat Pemakaian</CardTitle>
                     </CardHeader>
                     <CardContent className="grid gap-4">
                         <LoadingRegion className="overflow-hidden rounded-md border">
