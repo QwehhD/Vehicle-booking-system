@@ -19,7 +19,7 @@ enum ApprovalTab: string
     {
         return match ($this) {
             self::Waiting => 'Menunggu Saya',
-            self::Queue => 'Antrian',
+            self::Queue => 'Antrean',
             self::History => 'Riwayat',
         };
     }
