@@ -81,6 +81,6 @@ export default function Login() {
 }
 
 Login.layout = {
-    title: 'Masuk ke akun Anda',
-    description: 'Masukkan email dan kata sandi untuk melanjutkan',
+    title: 'Masuk ke Sistem',
+    description: 'Gunakan email dan kata sandi akun perusahaan Anda.',
 };

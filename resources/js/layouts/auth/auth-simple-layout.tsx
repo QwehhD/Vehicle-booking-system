@@ -7,9 +7,9 @@ import { home } from '@/routes';
 import type { AuthLayoutProps } from '@/types';
 
 const FEATURES = [
-    'Pemesanan kendaraan',
-    'Persetujuan berjenjang',
-    'Laporan periodik',
+    'Pemesanan Kendaraan',
+    'Persetujuan Berjenjang',
+    'Laporan Periodik',
 ];
 
 /**
@@ -49,12 +49,13 @@ export default function AuthSimpleLayout({
                         <div className="grid gap-5">
                             <p className="reveal font-display text-5xl leading-[1.02] font-light tracking-tight [--stagger:1] sm:text-6xl">
                                 <span className="text-gradient">
-                                    Setiap perjalanan, tercatat rapi.
+                                    Manajemen Armada Terpadu
                                 </span>
                             </p>
                             <p className="reveal max-w-sm text-sm text-muted-foreground [--stagger:2]">
-                                Pesan kendaraan, setujui berjenjang, dan pantau
-                                pemakaian armada dari satu tempat.
+                                Sistem pemesanan, persetujuan berjenjang, dan
+                                pemantauan pemakaian kendaraan operasional
+                                perusahaan.
                             </p>
                         </div>
 
