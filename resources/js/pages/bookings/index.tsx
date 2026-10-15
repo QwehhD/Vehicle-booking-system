@@ -2,6 +2,7 @@ import { Head, Link } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
 import { BookingFilters } from '@/components/bookings/booking-filters';
 import Heading from '@/components/heading';
+import { LoadingRegion } from '@/components/loading-region';
 import { Pagination } from '@/components/pagination';
 import { StatusBadge } from '@/components/status-badge';
 import { Button } from '@/components/ui/button';
@@ -52,7 +53,7 @@ export default function BookingsIndex({
                     regions={regions}
                 />
 
-                <div className="rounded-xl border">
+                <LoadingRegion className="rounded-xl border">
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -142,7 +143,7 @@ export default function BookingsIndex({
                             )}
                         </TableBody>
                     </Table>
-                </div>
+                </LoadingRegion>
 
                 <Pagination meta={bookings.meta} links={bookings.links} />
             </div>

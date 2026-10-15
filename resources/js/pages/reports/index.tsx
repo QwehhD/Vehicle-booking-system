@@ -9,6 +9,7 @@ import {
     XCircle,
 } from 'lucide-react';
 import Heading from '@/components/heading';
+import { LoadingRegion } from '@/components/loading-region';
 import { Pagination } from '@/components/pagination';
 import { ReportFilters } from '@/components/reports/report-filters';
 import { StatCard } from '@/components/stat-card';
@@ -71,140 +72,154 @@ export default function ReportsIndex({
                     regions={regions}
                 />
 
-                <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
-                    <StatCard
-                        label="Jumlah pemesanan"
-                        value={formatNumber(summary.total)}
-                        hint={period}
-                        icon={CalendarCheck}
-                    />
-                    <StatCard
-                        label="Disetujui + selesai"
-                        value={formatNumber(summary.approved_or_completed)}
-                        icon={CircleCheck}
-                    />
-                    <StatCard
-                        label="Ditolak"
-                        value={formatNumber(summary.rejected)}
-                        icon={XCircle}
-                    />
-                    <StatCard
-                        label="Dibatalkan"
-                        value={formatNumber(summary.cancelled)}
-                        icon={Ban}
-                    />
-                    <StatCard
-                        label="Total km"
-                        value={formatNumber(summary.distance)}
-                        hint="Pemesanan selesai"
-                        icon={Gauge}
-                    />
-                    <StatCard
-                        label="Total BBM"
-                        value={`${formatNumber(summary.fuel, 2)} L`}
-                        hint="Pemesanan selesai"
-                        icon={Fuel}
-                    />
-                </div>
+                <LoadingRegion className="grid grid-cols-1 gap-6">
+                    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
+                        <StatCard
+                            label="Jumlah pemesanan"
+                            value={formatNumber(summary.total)}
+                            hint={period}
+                            icon={CalendarCheck}
+                        />
+                        <StatCard
+                            label="Disetujui + selesai"
+                            value={formatNumber(summary.approved_or_completed)}
+                            icon={CircleCheck}
+                        />
+                        <StatCard
+                            label="Ditolak"
+                            value={formatNumber(summary.rejected)}
+                            icon={XCircle}
+                        />
+                        <StatCard
+                            label="Dibatalkan"
+                            value={formatNumber(summary.cancelled)}
+                            icon={Ban}
+                        />
+                        <StatCard
+                            label="Total km"
+                            value={formatNumber(summary.distance)}
+                            hint="Pemesanan selesai"
+                            icon={Gauge}
+                        />
+                        <StatCard
+                            label="Total BBM"
+                            value={`${formatNumber(summary.fuel, 2)} L`}
+                            hint="Pemesanan selesai"
+                            icon={Fuel}
+                        />
+                    </div>
 
-                <div className="rounded-xl border">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Kode</TableHead>
-                                <TableHead>Jadwal</TableHead>
-                                <TableHead>Pemohon</TableHead>
-                                <TableHead>Kendaraan</TableHead>
-                                <TableHead>Region</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead className="text-center">
-                                    Persetujuan
-                                </TableHead>
-                                <TableHead className="text-right">Km</TableHead>
-                                <TableHead className="text-right">
-                                    BBM (L)
-                                </TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {bookings.data.length === 0 ? (
+                    <div className="rounded-xl border">
+                        <Table>
+                            <TableHeader>
                                 <TableRow>
-                                    <TableCell
-                                        colSpan={9}
-                                        className="h-32 text-center text-muted-foreground"
-                                    >
-                                        Tidak ada pemesanan pada periode dan
-                                        filter ini.
-                                    </TableCell>
+                                    <TableHead>Kode</TableHead>
+                                    <TableHead>Jadwal</TableHead>
+                                    <TableHead>Pemohon</TableHead>
+                                    <TableHead>Kendaraan</TableHead>
+                                    <TableHead>Region</TableHead>
+                                    <TableHead>Status</TableHead>
+                                    <TableHead className="text-center">
+                                        Persetujuan
+                                    </TableHead>
+                                    <TableHead className="text-right">
+                                        Km
+                                    </TableHead>
+                                    <TableHead className="text-right">
+                                        BBM (L)
+                                    </TableHead>
                                 </TableRow>
-                            ) : (
-                                bookings.data.map((booking) => (
-                                    <TableRow key={booking.id}>
-                                        <TableCell className="font-medium">
-                                            <Link
-                                                href={show(booking.id)}
-                                                className="hover:underline"
-                                            >
-                                                {booking.code}
-                                            </Link>
-                                        </TableCell>
-                                        <TableCell className="whitespace-nowrap">
-                                            {formatSchedule(
-                                                booking.start_at,
-                                                booking.end_at,
-                                            )}
-                                        </TableCell>
-                                        <TableCell>
-                                            <div>{booking.requester_name}</div>
-                                            <div className="text-xs text-muted-foreground">
-                                                {booking.requester_department}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div>
-                                                {booking.vehicle?.plate_number}
-                                            </div>
-                                            <div className="text-xs text-muted-foreground">
-                                                {booking.vehicle?.type_label}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>
-                                            {
-                                                booking.vehicle?.location
-                                                    ?.region?.name
-                                            }
-                                        </TableCell>
-                                        <TableCell>
-                                            <StatusBadge
-                                                label={booking.status_label}
-                                                color={booking.status_color}
-                                            />
-                                        </TableCell>
-                                        <TableCell className="text-center tabular-nums">
-                                            {booking.approval_progress &&
-                                                `${booking.approval_progress.approved}/${booking.approval_progress.total}`}
-                                        </TableCell>
-                                        <TableCell className="text-right tabular-nums">
-                                            {booking.distance === null
-                                                ? '–'
-                                                : formatNumber(
-                                                      booking.distance,
-                                                  )}
-                                        </TableCell>
-                                        <TableCell className="text-right tabular-nums">
-                                            {booking.fuel_used === null
-                                                ? '–'
-                                                : formatNumber(
-                                                      booking.fuel_used,
-                                                      2,
-                                                  )}
+                            </TableHeader>
+                            <TableBody>
+                                {bookings.data.length === 0 ? (
+                                    <TableRow>
+                                        <TableCell
+                                            colSpan={9}
+                                            className="h-32 text-center text-muted-foreground"
+                                        >
+                                            Tidak ada pemesanan pada periode dan
+                                            filter ini.
                                         </TableCell>
                                     </TableRow>
-                                ))
-                            )}
-                        </TableBody>
-                    </Table>
-                </div>
+                                ) : (
+                                    bookings.data.map((booking) => (
+                                        <TableRow key={booking.id}>
+                                            <TableCell className="font-medium">
+                                                <Link
+                                                    href={show(booking.id)}
+                                                    className="hover:underline"
+                                                >
+                                                    {booking.code}
+                                                </Link>
+                                            </TableCell>
+                                            <TableCell className="whitespace-nowrap">
+                                                {formatSchedule(
+                                                    booking.start_at,
+                                                    booking.end_at,
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                <div>
+                                                    {booking.requester_name}
+                                                </div>
+                                                <div className="text-xs text-muted-foreground">
+                                                    {
+                                                        booking.requester_department
+                                                    }
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                <div>
+                                                    {
+                                                        booking.vehicle
+                                                            ?.plate_number
+                                                    }
+                                                </div>
+                                                <div className="text-xs text-muted-foreground">
+                                                    {
+                                                        booking.vehicle
+                                                            ?.type_label
+                                                    }
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                {
+                                                    booking.vehicle?.location
+                                                        ?.region?.name
+                                                }
+                                            </TableCell>
+                                            <TableCell>
+                                                <StatusBadge
+                                                    label={booking.status_label}
+                                                    color={booking.status_color}
+                                                />
+                                            </TableCell>
+                                            <TableCell className="text-center tabular-nums">
+                                                {booking.approval_progress &&
+                                                    `${booking.approval_progress.approved}/${booking.approval_progress.total}`}
+                                            </TableCell>
+                                            <TableCell className="text-right tabular-nums">
+                                                {booking.distance === null
+                                                    ? '–'
+                                                    : formatNumber(
+                                                          booking.distance,
+                                                      )}
+                                            </TableCell>
+                                            <TableCell className="text-right tabular-nums">
+                                                {booking.fuel_used === null
+                                                    ? '–'
+                                                    : formatNumber(
+                                                          booking.fuel_used,
+                                                          2,
+                                                      )}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                )}
+                            </TableBody>
+                        </Table>
+                    </div>
+                </LoadingRegion>
 
                 <Pagination meta={bookings.meta} links={bookings.links} />
             </div>
