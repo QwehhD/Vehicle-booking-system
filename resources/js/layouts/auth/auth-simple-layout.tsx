@@ -1,5 +1,6 @@
 import { Link, usePage } from '@inertiajs/react';
 import AppLogoIcon from '@/components/app-logo-icon';
+import { AppearanceToggle } from '@/components/appearance-toggle';
 import { OrbitArt } from '@/components/orbit-art';
 import { TodayDate } from '@/components/today-date';
 import { home } from '@/routes';
@@ -30,14 +31,17 @@ export default function AuthSimpleLayout({
                         href={home()}
                         className="flex items-center gap-3 rounded-sm focus-visible:ring-[3px] focus-visible:ring-ring/40 focus-visible:outline-none"
                     >
-                        <span className="flex size-9 items-center justify-center rounded-full border border-foreground/40">
+                        <span className="flex size-9 items-center justify-center rounded-md bg-brand text-brand-foreground">
                             <AppLogoIcon className="size-4" />
                         </span>
                         <span className="font-display text-sm font-medium tracking-[0.24em] uppercase">
                             Armada
                         </span>
                     </Link>
-                    <span className="eyebrow hidden sm:inline">{name}</span>
+                    <div className="flex items-center gap-4">
+                        <span className="eyebrow hidden sm:inline">{name}</span>
+                        <AppearanceToggle />
+                    </div>
                 </header>
 
                 <main className="grid flex-1 items-center gap-12 py-8 lg:grid-cols-2 lg:py-12">
