@@ -1,5 +1,5 @@
 import { Head, Link, usePage } from '@inertiajs/react';
-import AppLogoIcon from '@/components/app-logo-icon';
+import { OrbitArt } from '@/components/orbit-art';
 import { Button } from '@/components/ui/button';
 import { dashboard, login } from '@/routes';
 
@@ -37,20 +37,24 @@ export default function ErrorPage({
     return (
         <>
             <Head title={copy.title} />
-            <main className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 text-center">
-                <AppLogoIcon className="size-10 text-muted-foreground" />
-                <div className="grid gap-2">
-                    <p className="text-sm font-medium text-muted-foreground tabular-nums">
-                        {status}
+            <main className="app-canvas flex min-h-svh flex-col items-center justify-center gap-8 bg-background p-6 text-center">
+                <OrbitArt className="reveal w-56 sm:w-64" />
+                <div className="grid gap-3 [--stagger:1]">
+                    <p className="reveal font-display text-7xl leading-none font-light tracking-tight tabular-nums">
+                        <span className="text-gradient">{status}</span>
                     </p>
-                    <h1 className="text-2xl font-semibold tracking-tight">
+                    <h1 className="reveal font-display text-2xl font-normal tracking-tight">
                         {copy.title}
                     </h1>
-                    <p className="max-w-md text-sm text-muted-foreground">
+                    <p className="reveal max-w-md text-sm text-muted-foreground">
                         {message ?? copy.description}
                     </p>
                 </div>
-                <Button asChild>
+                <Button
+                    asChild
+                    variant="outline"
+                    className="reveal [--stagger:2]"
+                >
                     <Link href={auth.user ? dashboard() : login()}>
                         {auth.user ? 'Kembali ke dashboard' : 'Masuk'}
                     </Link>
