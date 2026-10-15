@@ -5,7 +5,7 @@ import type { BookingApproval } from '@/types';
 
 const DOT_CLASSES: Record<BookingApproval['status'], string> = {
     pending: 'border-amber-400 bg-background',
-    approved: 'border-emerald-500 bg-emerald-500',
+    approved: 'border-blue-500 bg-blue-500',
     rejected: 'border-red-500 bg-red-500',
     skipped:
         'border-slate-300 bg-slate-200 dark:border-slate-600 dark:bg-slate-700',

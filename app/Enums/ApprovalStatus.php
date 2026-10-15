@@ -23,7 +23,7 @@ enum ApprovalStatus: string
     {
         return match ($this) {
             self::Pending => 'amber',
-            self::Approved => 'emerald',
+            self::Approved => 'blue',
             self::Rejected => 'red',
             self::Skipped => 'slate',
         };
