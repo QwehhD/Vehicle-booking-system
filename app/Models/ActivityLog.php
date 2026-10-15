@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Like;
 use Carbon\CarbonImmutable;
 use Database\Factories\ActivityLogFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -82,8 +83,8 @@ class ActivityLog extends Model
         $query
             ->when($filters['search'] ?? null, fn (Builder $query, string $search) => $query
                 ->where(fn (Builder $query) => $query
-                    ->where('description', 'like', "%{$search}%")
-                    ->orWhere('ip_address', 'like', "%{$search}%")))
+                    ->whereRaw(Like::clause('description'), [Like::contains($search)])
+                    ->orWhereRaw(Like::clause('ip_address'), [Like::contains($search)])))
             ->when($filters['user_id'] ?? null, fn (Builder $query, int $userId) => $query->where('user_id', $userId))
             ->when($filters['action'] ?? null, fn (Builder $query, string $action) => $query->where('action', $action))
             ->when($filters['date_from'] ?? null, fn (Builder $query, string $from) => $query

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ApprovalStatus;
 use App\Enums\BookingStatus;
+use App\Support\Like;
 use Carbon\CarbonImmutable;
 use Closure;
 use Database\Factories\BookingFactory;
@@ -221,12 +222,12 @@ class Booking extends Model
     #[Scope]
     protected function search(Builder $query, string $term): void
     {
-        $like = "%{$term}%";
+        $like = Like::contains($term);
 
         $query->where(fn (Builder $query) => $query
-            ->where('bookings.code', 'like', $like)
-            ->orWhere('bookings.requester_name', 'like', $like)
-            ->orWhereHas('vehicle', fn (Builder $vehicle) => $vehicle->where('plate_number', 'like', $like)));
+            ->whereRaw(Like::clause('bookings.code'), [$like])
+            ->orWhereRaw(Like::clause('bookings.requester_name'), [$like])
+            ->orWhereHas('vehicle', fn (Builder $vehicle) => $vehicle->whereRaw(Like::clause('plate_number'), [$like])));
     }
 
     /**

@@ -77,3 +77,17 @@ test('redirects invalid filters to the unfiltered log', function () {
         ->get(route('activity-logs.index', ['action' => 'booking.deleted']))
         ->assertRedirect(route('activity-logs.index'));
 });
+
+test('treats the search term as plain text', function () {
+    $admin = User::factory()->admin()->create();
+    ActivityLog::factory()->for($admin)->create(['description' => 'Admin Pool masuk ke aplikasi']);
+    ActivityLog::factory()->for($admin)->create(['description' => 'Diskon 50% untuk BK_01']);
+
+    $search = fn (string $term) => $this->actingAs($admin)->get(route('activity-logs.index', ['search' => $term]));
+
+    $search('%')->assertInertia(fn (Assert $page) => $page
+        ->has('logs.data', 1)
+        ->where('logs.data.0.description', 'Diskon 50% untuk BK_01'));
+    $search('BK_01')->assertInertia(fn (Assert $page) => $page->has('logs.data', 1));
+    $search('_')->assertInertia(fn (Assert $page) => $page->has('logs.data', 1));
+});
